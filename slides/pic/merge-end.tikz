@@ -1,0 +1,49 @@
+﻿\usetikzlibrary{calc}
+\usetikzlibrary{bending}
+\usetikzlibrary{decorations.pathreplacing}
+
+\pgfdeclarelayer{bg}
+\pgfsetlayers{bg,main}
+
+\begin{tikzpicture}
+	\node (loc) at (0, 0) {}
+					(.5,0) node[above=.2cm] {Local};
+
+	\begin{pgfonlayer}{bg}
+	\draw[blue, fill=blue!10] ($(loc)+(-.5,1)$) rectangle ($(loc)+(6.5,-2)$);
+	\end{pgfonlayer}
+
+	\foreach \x in {0,...,2,}
+	{
+		\draw[thick, black, fill=orange] ($(loc)+(\x, -1)$) circle [radius=.1] node[] (C\x) {};
+	}
+
+	\foreach \x in {3,...,4}
+	{
+		\draw[thick, black, fill=magenta] ($(loc)+(\x, -1)$) circle [radius=.1] node (CL\x) {};
+		\draw[thick, black, fill=green!60!black] ($(loc)+(\x, 0)$) circle [radius=.1] node (CR\x) {};
+	}
+
+	\draw[thick, black]
+		(C0) node[above=.4cm, right=.1] {\tiny\texttt{master}} to (C1) to (C2)
+		(C2) to[in=200, out=30] (CR3) node [above=.5cm, right=.1] {\tiny\texttt{origin/master}}
+		(CR3) to (CR4)
+		(C2) to (CL3)
+		(CL3) to (CL4)
+	;
+	
+	\draw[thick, fill=orange, black] ($(loc)+(5,-1)$) circle [radius=.1] node (C5) {};
+
+	\draw[thick, black]
+		(CR4) to[out=-20, in=160] (C5)
+		(CL4) to (C5) to (6,-1)
+	;
+
+	\draw[ultra thick, darkgray, ->]
+		(4, -2.5) node[anchor=east] (T0) {\footnotesize ``True'' 3-Way Merge} to[in=-90, out=0] (C5)
+	;
+
+	\node[] (T1) at ($(T0)+(0,-.4)$) {
+		\tiny\texttt{Merge branch 'origin/master' into master}
+	};
+\end{tikzpicture}

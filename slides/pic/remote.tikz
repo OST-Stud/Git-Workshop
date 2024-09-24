@@ -1,0 +1,34 @@
+﻿\usetikzlibrary{calc}
+
+\pgfdeclarelayer{bg}
+\pgfsetlayers{bg,main}
+
+\tikzset{
+    db/.pic={
+		\draw[white, fill=white](-.6,0) rectangle (.6,1.4);
+		\draw[white, fill=white](0,1.4) ellipse [x radius=.6,y radius=.15];
+        \foreach \y in {0,.5,1}
+		{
+	        \draw[thick, fill=white](-0.6,\y) to [looseness=0.5,bend right=90]   ++(1.2,0)
+	                   to ++(0,0.4) to [looseness=0.5,bend left=90] ++(-1.2,0)
+	                   to ++(0,-0.4);
+	        \draw[thick] (-0.6,\y+0.4) edge[looseness=0.5,bend left=90] ++(1.2,0);
+	    }
+    }`
+}
+
+\begin{tikzpicture}
+	\draw[thick]
+		(0,0) pic{db} node(DB1){}
+		(DB1) ++(4.5, 0) pic{db} node (DB2){};
+
+	\begin{pgfonlayer}{bg}
+	\draw[blue!80, fill=blue!10]
+		(DB1.north west) ++(-1, 3) node[black, anchor=north west, below right=.2cm]{Laptop} rectangle ($(DB1.south east) + (1, -1)$);
+	\draw[red!80, fill=red!10]
+		(DB2.north west) ++(-1, 3) node[black, anchor=north west, below right=.2cm]{Server} rectangle ($(DB2.south east) + (1, -1)$);
+	\end{pgfonlayer}
+
+	\draw[thick] (DB1) ++(1,  .2) edge[<-, bend right] node[pos=.5, below]{\texttt{fetch}} ++(2.5, 0);
+	\draw[thick] (DB1) ++(1, 1.2) edge[->, bend left]  node[pos=.5, above]{\texttt{push}}  ++(2.5, 0);
+\end{tikzpicture}

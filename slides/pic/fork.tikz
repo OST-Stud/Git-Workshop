@@ -1,0 +1,62 @@
+﻿\usetikzlibrary{calc}
+
+\pgfdeclarelayer{bg}
+\pgfsetlayers{bg,main}
+
+\tikzset{
+    db/.pic={
+		\draw[white, fill=white](-.6,0) rectangle (.6,1.4);
+		\draw[white, fill=white](0,1.4) ellipse [x radius=.6,y radius=.15];
+        \foreach \y in {0,.5,1}
+		{
+	        \draw[thick, fill=white](-0.6,\y) to [looseness=0.5,bend right=90]   ++(1.2,0)
+	                   to ++(0,0.4) to [looseness=0.5,bend left=90] ++(-1.2,0)
+	                   to ++(0,-0.4);
+	        \draw[thick] (-0.6,\y+0.4) edge[looseness=0.5,bend left=90] ++(1.2,0);
+	    }
+    }`
+}
+
+\begin{tikzpicture}
+	\draw (0, 0)          pic{db} node (DBA1){} node[below=.2cm] {\texttt{proj}};
+	\draw (DBA1) ++(6, 0) pic{db} node (DBA2){} node[below=.2cm] {\texttt{rick/proj}};
+	\draw (DBA1) ++(0,-5) pic{db} node (DBB1){} node[below=.2cm] {\texttt{proj}};
+	\draw (DBB1) ++(6, 0) pic{db} node (DBB2){} node[below=.2cm] {\texttt{morty/proj}};
+	
+
+	\begin{pgfonlayer}{bg}
+	\draw[blue!80, fill=blue!10!white]
+		(DBA1.north west) ++(-1.2, 3) node[black, anchor=north west, below right=.2cm]{Laptop}
+		rectangle ($(DBB1.south east) + (1.2, -1.5)$);
+
+	\draw[red!80, fill=red!10!white]
+		(DBA2.north west) ++(-1.2, 3) node[black, anchor=north west, below right=.2cm]{Server}
+		rectangle ($(DBB2.south east) + (1.2, -1.5)$);
+
+	\draw[magenta!80, fill=magenta!20, fill opacity=.8]
+		(DBA1.north west) ++(-2.5, 2)
+		node[black, anchor=north east, rotate=90, below left=.2cm] {Rick}
+		rectangle ($(DBA2.south east) + (2, -.8)$);
+
+	\draw[cyan!80, fill=cyan!20, fill opacity=.8]
+		(DBB1.north west) ++(-2.5, 2)
+		node[black, anchor=north east, rotate=90, below left=.2cm] {Morty}
+		rectangle ($(DBB2.south east) + (2, -.8)$);
+	\end{pgfonlayer}
+
+	\draw[darkgray, ultra thick, <->]
+		($(DBA1.north east)+(.75,.5)$) to node[pos=.5, above]{\footnotesize\texttt{push / pull}} ($(DBA2.north west)+(-.75,.5)$);
+
+	\draw[darkgray, ultra thick, <->]
+		($(DBB1.north east)+(.75,.5)$) to node[pos=.5, above]{\footnotesize\texttt{push / pull}} ($(DBB2.north west)+(-.75,.5)$);
+
+	\draw[black, ultra thick, <->]
+		($(DBA2.south)+(0,-.75)$) to node[
+			pos=.5, right=.2cm, thick, draw=red, fill=white
+		]{\textbf{\texttt{pull request}}} ($(DBB2.north)+(0,1.75)$);
+
+	\draw[darkgray, ultra thick, ->]
+		($(DBA2.south west)+(-1,-.5)$) to[bend right] node[pos=.6, below right, rotate=30]{\texttt{pull}}($(DBB1.north east)+(.75,1.5)$);
+	
+
+\end{tikzpicture}e}

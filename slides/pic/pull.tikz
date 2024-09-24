@@ -1,0 +1,41 @@
+﻿\usetikzlibrary{calc}
+\usetikzlibrary{bending}
+\usetikzlibrary{decorations.pathreplacing}
+
+\pgfdeclarelayer{bg}
+\pgfsetlayers{bg,main}
+
+\begin{tikzpicture}
+	\node (rem) at (0, 0) {}
+					(.5,0) node[above=.2cm] {\texttt{origin}};
+	\begin{pgfonlayer}{bg}
+	\draw[red, fill=red!10] ($(rem)+(-.5,1)$) rectangle ($(rem)+(6.5,-1)$);
+	\end{pgfonlayer}
+	\foreach \x in {0,...,4}
+	{
+		\draw[thick, black, ->] ($(rem)+(\x,0)$) edge ++(1, 0);
+		\draw[thick, black, fill=green!60!black] ($(rem)+(\x, 0)$) circle [radius=.1];
+	}
+
+	\node (loc) at (0,-2.5) {}
+					(.5,-2.5) node[above=.2cm] {Local};
+	\begin{pgfonlayer}{bg}
+	\draw[blue, fill=blue!10] ($(loc)+(-.5,1)$) rectangle ($(loc)+(6.5,-1)$);
+	\end{pgfonlayer}
+	\foreach \x in {0,...,2}
+	{
+		\draw[thick, black, ->] ($(loc)+(\x, 0)$) edge ++(1, 0);
+		\draw[thick, black, fill=magenta] ($(loc)+(\x, 0)$) circle [radius=.1];
+	}
+
+	\draw[thick, decorate, decoration={brace}] (2.5, .25) 
+		-- node[above=.15cm]{\footnotesize Neue Commits} (4.5,.25);
+	\draw[ultra thick, <-, darkgray] (3, -2.25) to[bend left]
+		node[pos=.5, left]{\texttt{pull}} (3,-.2);
+	
+	\foreach \x in {3,...,4}
+	{
+		\draw[thick, black, ->] ($(loc)+(\x,0)$) edge ++(1, 0);
+		\draw[thick, black, fill=green!60!black] ($(loc)+(\x, 0)$) circle [radius=.1];
+	}
+\end{tikzpicture}

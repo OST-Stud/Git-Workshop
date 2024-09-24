@@ -1,0 +1,654 @@
+\documentclass[handout]{beamer}
+
+\usepackage[german]{babel}
+
+\usepackage{tikz}
+\usetikzlibrary{trees}
+
+\usetikzlibrary{calc}
+\usetikzlibrary{bending}
+\usetikzlibrary{decorations.pathreplacing}
+
+\pgfdeclarelayer{bg}
+\pgfsetlayers{bg,main}
+
+\tikzset{
+	db/.pic={
+		\draw[white, fill=white](-.6,0) rectangle (.6,1.4);
+		\draw[white, fill=white](0,1.4) ellipse [x radius=.6,y radius=.15];
+		\foreach \y in {0,.5,1}
+		{
+			\draw[thick, fill=white]
+				(-0.6,\y) to [looseness=0.5,bend right=90] ++(1.2,0)
+						  to ++(0,0.4)
+						  to [looseness=0.5,bend left=90] ++(-1.2,0)
+						  to ++(0,-0.4);
+			\draw[thick] (-0.6,\y+0.4) edge[looseness=0.5,bend left=90] ++(1.2,0);
+		}
+	}
+}
+
+
+\title{Git Einführung}
+\author{
+	Naoki Pross\inst{1}
+}
+\institute[HSR]{\inst{1}Hochschule f\"ur Technick Rapperswil}
+
+\date{24. September / 1. Oktober 2019}
+
+\usetheme{Malmoe}
+\usecolortheme{seagull}
+
+\AtBeginSection[]
+{
+	\begin{frame}[shrink]{Inhaltsverzeichnis}
+		\tableofcontents[
+			currentsection,
+			hideothersubsections,
+			sectionstyle=show/shaded,
+		]
+	\end{frame}
+}
+
+\begin{document}
+
+\frame{\titlepage}
+
+\section{Warum Git}
+
+\subsection{Warum}
+\begin{frame}{Was m\"ochten wir?}
+	\begin{block}{Das Problem}
+		Dateien zwischen Machine synchronisieren und sie mit mehr Leute
+		bearbeiten. Spezifischer Textdateien bearbeiten (z.B. Quellcode)
+	\end{block}
+	\pause
+
+	\begin{block}{Eine L\"osung}
+	\centering
+	\vspace{1em}
+	\includegraphics[width=0.25\textwidth]{pic/git.png}\\
+	\vspace{1em}
+
+	(Engl. f\"ur Bl\"odmann) Entwickelt von Linus Torvalds
+	\end{block}
+\end{frame}
+
+\subsection{Vorteile}
+\begin{frame}{Was ist git?}
+	\begin{block}{Was wir brauchen}
+	\begin{itemize}
+		\item Synchronisation
+		\item Team Datei Bearbeitung
+		\item Problemlose Offline-Nutzung
+	\end{itemize}
+	\end{block}
+	\pause
+
+	\begin{block}{Was kriegen wir extra}
+	\begin{itemize}
+		\item Geschichte jedes Dokuments im Projekt
+		\item Kryptographische Sicherheit der Projektgeschichte
+		\item Gemeinsamer Dateizugriff ohne zentraler Server 
+	\end{itemize}
+	\end{block}
+\end{frame}
+
+\begin{frame}[c]{Bemerkung}
+	\centering
+	{\LARGE  
+	Git l\"ost ein komplex Problem \\
+	daher ist Git auch komplex
+	}
+
+	{\footnotesize
+		But don't worry it's not \emph{too} hard
+	}
+\end{frame}
+
+\section{Git lernen}
+
+\subsection{Repository}
+\begin{frame}{Begriff: Repository}
+\begin{minipage}{.55\linewidth}
+\resizebox{\textwidth}{!}{\begin{tikzpicture}[
+	grow via three points={
+		one child at (0.8,-0.7) and two children at (0.8,-0.7) and (0.8,-1.4)
+	},
+	edge from parent path={
+	($(\tikzparentnode\tikzparentanchor)+(.4cm,0pt)$) |- (\tikzchildnode\tikzchildanchor)
+	},
+	growth parent anchor=west,
+	parent anchor=south west,
+  ]
+	{\tikzset{
+    every node/.style={
+        draw=lightgray,
+		 fill=lightgray!40,
+        thick,
+        anchor=west,
+        inner sep=3pt,
+        minimum size=1pt,
+		 font=\ttfamily,
+	}}
+	\node (P) at (-6, 4) {Project/}
+	child { node[draw=red, fill=red!10] {.git/} }
+	child { node {src/}
+		child { node [draw=none, fill=none] {main.c} }
+		child { node [draw=none, fill=none] {build.ninja} }
+		child { node {\ldots} }
+    }
+    child [missing] {}
+    child [missing] {}
+    child [missing] {}
+    child { node {release/}
+        child { node [draw=none, fill=none] {magic} }
+        child { node [draw=none, fill=none] {awesome.a} }
+    };}
+
+    \visible<2->{
+	\draw[black] pic{db} node (DB) {};
+	\draw[ultra thick, darkgray, ->]
+		($(P.east)+(.2,0)$) to[out=0, in=90] ($(DB.north)+(0,1.6)$)
+	;
+	\node[below=.3cm, align=center] (DB.south) {Repository};
+	}
+\end{tikzpicture}}
+\end{minipage}\hfill%
+\begin{minipage}{.4\linewidth}
+\pause
+F\"ur Git ein \emph{Repo} ist eine Verzeichnis mit einer spezieller (unsichtbar)
+Unterverzeichnis \texttt{\textcolor{red}{.git}}
+
+\vspace{1em}
+
+Man soll \textbf{nie} \texttt{.git} l\"oschen.
+\end{minipage}
+\end{frame}
+
+\subsection{Commit}
+\begin{frame}{Snapshots}
+    \begin{center}
+    \begin{tikzpicture}
+    \node at (-1, 2) [draw, fill=gray!15, thick, font=\ttfamily, left] (P) {Project/};
+    \pause
+    \draw[black, thick, ->] (P.north east) ++(.2,-.2) arc (-90:180:.5)
+        node[pos=.6, above]{bearbeiten};
+    \draw[black, thick, ->] (0, 0) -- (7.2, 0) node [below] {Zeit};
+    \foreach \x/\t in {0/16:04:28, 2/16:37:01, 4/17:15:44, 6/18:01:03}
+    {
+        \pause
+        \draw[color=black, fill=magenta, thick] (\x, 0) circle (.12)
+            node[below=5pt, anchor=east, rotate=70, font=\ttfamily, align=right] {\tiny 2019-09-18\\\small\t};
+        \draw[thick, ->, gray] (-.8, 2) to[bend left, in=120] (\x, .2);
+    }
+    \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+\begin{frame}{Begriff: Commit}
+    \begin{block}{Ein Commit enthalt}
+    \begin{itemize}
+        \item Die \"Anderungen der Dateien \textbf{``snapshot''} \pause
+        \item Autor Name + Email \pause
+        \item Zeitstempel \pause
+        \item \textbf{Eine Beschreibung der \"Anderungen} \pause
+        \item kryptographisches Hash der Dateien
+    \end{itemize}
+    \end{block}
+
+    \pause
+	\begin{center}
+	\textbf{
+		Commits \textcolor{red}{k\"onnen nicht} \"andert werden, \\
+    	weil sie ``Geschichte'' des Projekts sind.
+	}
+    \end{center}
+\end{frame}
+
+\begin{frame}[fragile]{Commit Beispiel}
+\centering\footnotesize
+\begin{verbatim}
+commit e584e04c5f8ffb14e50c701c1fd8178457a51743
+Author: Nao Pross <naopross@thearcway.org>
+Date:   Tue Jan 22 04:31:30 2019 +0100
+
+    Add test for task and job, fix bug in job
+
+    By being a std::set job did not allow to add duplicate
+    elements, changing it to a std::multiset fixes the issue.
+\end{verbatim}
+\end{frame}
+
+\begin{frame}[c]{Aber was ist ein Commit?}
+	\begin{center}
+	{\LARGE
+		Commit = ``Logical Unit of Work''
+	}
+
+	\vspace{2em}
+	Ein Commit kann auch sehr klein sein. \\
+	Generell kann man sagen: 
+	\vspace{2em}
+
+	{\LARGE
+		je mehr Commits, desto besser
+	}
+	\end{center}
+\end{frame}
+
+\subsection{Remote}
+\begin{frame}{Begriff: Remote}\begin{center}
+    \begin{minipage}{.65\linewidth}
+	\begin{tikzpicture}
+		\draw[thick]
+			(0,0) pic{db} node(DB1){}
+			(DB1) ++(4.5, 0) pic{db} node (DB2){};
+
+		\begin{pgfonlayer}{bg}
+		\draw[blue!80, fill=blue!10]
+			(DB1.north west) ++(-1, 3) node[
+				black, anchor=north west, below=.75cm, right=.15cm, align=left
+			]{Laptop\\{\footnotesize (Sie)}} rectangle ($(DB1.south east) + (1, -1)$);
+		\draw[red!80, fill=red!10]
+			(DB2.north west) ++(-1, 3) node[
+				black, anchor=north west, below=.75cm, right=.1cm, align=left
+			]{Server\\{\footnotesize (z.B. Github)}} rectangle ($(DB2.south east) + (1, -1)$);
+
+		\end{pgfonlayer}
+		\visible<3->{
+		\draw[]
+			(DB2.north west) ++(-1, 3) node[
+				black, anchor=south west, above=.25cm, right=.1cm, align=left
+			]{\texttt{origin}};
+		}
+
+		\visible<4->{
+		\draw[thick] (DB1) ++(1,  .2) edge[<-, bend right] 
+			node[pos=.5, below]{\texttt{pull}} ++(2.5, 0);
+		\draw[thick] (DB1) ++(1, 1.2) edge[->, bend left] 
+			node[pos=.5, above]{\texttt{push}}  ++(2.5, 0);
+		}
+	\end{tikzpicture}
+    \end{minipage}
+	\pause
+	\begin{minipage}[c]{.3\linewidth}
+	Ein \emph{Remote} ist ein Clone (Kopie) des Repos auf eine andere Maschine
+	\\
+	\pause
+
+	Remote k\"onnen ein name haben, z.B. \texttt{origin}
+	\end{minipage}
+\end{center}
+\end{frame}
+
+\begin{frame}{Zu einem Remote synchronisieren}
+\begin{center}
+\resizebox{.9\textwidth}{!}{
+\begin{tikzpicture}
+	\node (rem) at (0, 0) {}
+					(.5,0) node[above=.2cm] {\texttt{origin}};
+
+	\node (loc) at (0,-2.5) {}
+					(.5,-2.5) node[above=.2cm] {Local};
+
+	\begin{pgfonlayer}{bg}
+	\draw[red, fill=red!10] ($(rem)+(-.5,1)$) rectangle ($(rem)+(6.5,-1)$);
+	\draw[blue, fill=blue!10] ($(loc)+(-.5,1)$) rectangle ($(loc)+(6.5,-1)$);
+	\end{pgfonlayer}
+
+	\foreach \x in {0,...,2}
+	{
+		\draw[thick, black, ->] ($(rem)+(\x,0)$) edge ++(1, 0);
+		\draw[thick, black, fill=orange] ($(rem)+(\x, 0)$) circle [radius=.1];
+
+		\draw[thick, black, ->] ($(loc)+(\x, 0)$) edge ++(1, 0);
+		\draw[thick, black, fill=orange] ($(loc)+(\x, 0)$) circle [radius=.1];
+	}
+
+	\foreach \x in {3,...,4}
+	{
+		\draw[thick, black, ->] ($(loc)+(\x, 0)$) edge ++(1, 0);
+		\draw[thick, black, fill=magenta] ($(loc)+(\x, 0)$) circle [radius=.1];
+	}
+
+	\draw[thick, decorate, decoration={brace, mirror}] (2.5, -2.75) 
+		-- node[below=.15cm]{\footnotesize Neue Commits} (4.5,-2.75);
+	\pause
+
+	\draw[ultra thick, ->, darkgray] (3, -2.25) to[bend left]
+		node[pos=.5, left]{\texttt{push}} (3,-.2);
+	
+	\foreach \x in {3,...,4}
+	{
+		\draw[thick, black, ->] ($(rem)+(\x,0)$) edge ++(1, 0);
+		\draw[thick, black, fill=magenta] ($(rem)+(\x, 0)$) circle [radius=.1];
+	}
+\end{tikzpicture}
+}
+\end{center}
+\end{frame}
+
+\begin{frame}{Von einem Remote synchronisieren}
+\centering
+\resizebox{.9\textwidth}{!}{
+\begin{tikzpicture}
+	\node (rem) at (0, 0) {}
+					(.5,0) node[above=.2cm] {\texttt{origin}};
+
+	\node (loc) at (0,-2.5) {}
+					(.5,-2.5) node[above=.2cm] {Local};
+
+	\begin{pgfonlayer}{bg}
+	\draw[red, fill=red!10] ($(rem)+(-.5,1)$) rectangle ($(rem)+(6.5,-1)$);
+	\draw[blue, fill=blue!10] ($(loc)+(-.5,1)$) rectangle ($(loc)+(6.5,-1)$);
+	\end{pgfonlayer}
+
+	\foreach \x in {0,...,2}
+	{
+		\draw[thick, black, ->] ($(rem)+(\x,0)$) edge ++(1, 0);
+		\draw[thick, black, fill=orange] ($(rem)+(\x, 0)$) circle [radius=.1];
+
+		\draw[thick, black, ->] ($(loc)+(\x, 0)$) edge ++(1, 0);
+		\draw[thick, black, fill=orange] ($(loc)+(\x, 0)$) circle [radius=.1];
+	}
+
+	\foreach \x in {3,...,4}
+	{
+		\draw[thick, black, ->] ($(rem)+(\x,0)$) edge ++(1, 0);
+		\draw[thick, black, fill=green!60!black] ($(rem)+(\x, 0)$) circle [radius=.1];
+	}
+
+	\draw[thick, decorate, decoration={brace}] (2.5, .25) 
+		-- node[above=.15cm]{\footnotesize Neue Commits} (4.5,.25);
+	\pause
+
+	\draw[ultra thick, <-, darkgray] (3, -2.25) to[bend left]
+		node[pos=.5, left]{\texttt{pull}} (3,-.2);
+
+	\foreach \x in {3,...,4}
+	{
+		\draw[thick, black, ->] ($(loc)+(\x,0)$) edge ++(1, 0);
+		\draw[thick, black, fill=green!60!black] ($(loc)+(\x, 0)$) circle [radius=.1];
+	}
+\end{tikzpicture}
+}
+\end{frame}
+
+\subsection{Merge}
+\begin{frame}{Merge}
+\begin{center}
+\resizebox{.9\textwidth}{!}{
+\begin{tikzpicture}
+	\node (rem) at (0, 0) {}
+					(.5,0) node[above=.2cm] {\texttt{origin}};
+
+	\node (loc) at (0,-2.5) {}
+					(.5,-2.5) node[above=.2cm] {Local};
+
+	\begin{pgfonlayer}{bg}
+	\draw[red, fill=red!10] ($(rem)+(-.5,1)$) rectangle ($(rem)+(6.5,-1)$);
+	\draw[blue, fill=blue!10] ($(loc)+(-.5,1)$) rectangle ($(loc)+(6.5,-1)$);
+	\end{pgfonlayer}
+
+	\foreach \x in {0,...,2}
+	{
+		\draw[thick, black, ->] ($(rem)+(\x,0)$) edge ++(1, 0);
+		\draw[thick, black, fill=orange] ($(rem)+(\x, 0)$) circle [radius=.1];
+
+		\draw[thick, black, ->] ($(loc)+(\x, 0)$) edge ++(1, 0);
+		\draw[thick, black, fill=orange] ($(loc)+(\x, 0)$) circle [radius=.1];
+	}
+
+	\foreach \x in {3,...,4}
+	{
+		\draw[thick, black, ->] ($(rem)+(\x,0)$) edge ++(1, 0);
+		\draw[thick, black, fill=green!60!black] ($(rem)+(\x, 0)$) circle [radius=.1];
+
+		\draw[thick, black, ->] ($(loc)+(\x, 0)$) edge ++(1, 0);
+		\draw[thick, black, fill=magenta] ($(loc)+(\x, 0)$) circle [radius=.1];
+	}
+
+	\pause
+	\draw[thick, decorate, decoration={brace}] (2.5, .25) 
+		-- node[above=.15cm]{\footnotesize Neue Commits} (4.5,.25);
+	\draw[thick, decorate, decoration={brace, mirror}] (2.5, -2.75) 
+		-- node[below=.15cm]{\footnotesize Neue Commits} (4.5,-2.75);
+
+	\pause
+	\draw[ultra thick, <-, darkgray] (3, -2.25) to[bend left]
+		node[pos=.5, left]{\texttt{fetch}} (3,-.2);
+\end{tikzpicture}
+}
+\end{center}
+\end{frame}
+
+\begin{frame}{Begriff: 3-Way Merge}
+\begin{center}
+\resizebox{.9\textwidth}{!}{
+\begin{tikzpicture}
+	\node (loc) at (0, 0) {}
+					(.5,0) node[above=.2cm] {Local};
+
+	\begin{pgfonlayer}{bg}
+	\shade[top color=red!10, bottom color=blue!20] ($(loc)+(-.5,1)$) rectangle ($(loc)+(6.5,-2)$);
+	\draw[blue] ($(loc)+(-.5,1)$) rectangle ($(loc)+(6.5,-2)$);
+	\end{pgfonlayer}
+
+	\foreach \x in {0,...,2,}
+	{
+		\draw[thick, black, fill=orange] ($(loc)+(\x, -1)$) circle [radius=.1] node[] (C\x) {};
+	}
+
+	\foreach \x in {3,...,4}
+	{
+		\draw[thick, black, fill=magenta] ($(loc)+(\x, -1)$) circle [radius=.1] node (CL\x) {};
+		\draw[thick, black, fill=green!60!black] ($(loc)+(\x, 0)$) circle [radius=.1] node (CR\x) {};
+	}
+
+	\draw[thick, black]
+		(C0) node[above=.4cm, right=.1] {\tiny\texttt{master}} to (C1) to (C2)
+		(C2) to[in=200, out=30] (CR3) node [above=.5cm, right=.1] {\tiny\texttt{origin/master}}
+		(CR3) to (CR4)
+		(C2) to (CL3)
+		(CL3) to (CL4)
+	;
+	
+	\pause
+
+	\draw[thick, fill=orange, black] ($(loc)+(5,-1)$) circle [radius=.1] node (C5) {};
+
+	\draw[thick, black]
+		(CR4) to[out=-20, in=160] (C5)
+		(CL4) to (C5) to (6,-1)
+	;
+
+	\pause
+
+	\draw[ultra thick, darkgray, ->]
+		(4, -2.5) node[anchor=east] (T0) {\footnotesize ``True'' Merge} to[in=-90, out=0] (C5)
+	;
+
+	\node[] (T1) at ($(T0)+(0,-.4)$) {
+		\tiny\texttt{Merge branch 'origin/master' into master}
+	};
+
+\end{tikzpicture}
+}
+\end{center}
+\end{frame}
+
+\begin{frame}[fragile]{Konflikte}
+	\begin{block}{}
+	D.h. Was passiert wenn 2 Leute die gleiche Linie in einem Dokument bearbeiten?
+	\\
+	\pause
+	\vspace{1em}
+	Git kann nicht wissen welche version besser ist, und so fragt dir.
+	\end{block}
+	\begin{verbatim}
+...
+Here is a line that nobody touched
+<<<<<<< HEAD
+I have edited this line
+=======
+Someone else has also edited this line
+>>>>>>> origin/master
+...\end{verbatim}
+\end{frame}
+\begin{frame}{Warum ``3-Way''?}
+	\begin{center}
+	\begin{figure}
+	\fbox{\includegraphics[width=1\textwidth]{pic/smerge}}
+	\caption{Sublime Merge}
+	\end{figure}
+	\end{center}
+
+	\pause
+	\begin{center}
+	\Large
+	\texttt{pull} ist ein Alias f\"ur \texttt{fetch} + \texttt{merge}
+	\end{center}
+\end{frame}
+
+\subsection{Branch}
+\begin{frame}[c]{Branch}
+	\begin{center}
+	\scalebox{-1}[-1]{\includegraphics[width=\textwidth]{pic/treebranch}}
+	\end{center}
+\end{frame}
+
+\begin{frame}{Begriff: Branch}
+\begin{center}
+\resizebox{\textwidth}{!}{
+\begin{tikzpicture}
+	\node (loc) at (0, 0) {}
+					(.5,0) node[above=.2cm] {Local};
+
+	\begin{pgfonlayer}{bg}
+	\draw[blue, fill=blue!10] ($(loc)+(-.5,1)$) rectangle ($(loc)+(6.5,-2)$);
+	\end{pgfonlayer}
+
+	\foreach \x in {0,...,1}
+	{
+		\draw[thick, black, fill=orange] ($(loc)+(\x, -1)$) circle [radius=.1] node[] (C\x) {};
+	}
+
+	\foreach \x in {2,...,5}
+	{
+		\draw[thick, black, fill=magenta] ($(loc)+(\x, -1)$) circle [radius=.1] node (CL\x) {};
+		\draw[thick, black, fill=green!60!black] ($(loc)+(\x, 0)$) circle [radius=.1] node (CR\x) {};
+	}
+
+	\draw[thick, black]
+		(C0) to (C1)
+		(C1) to[in=200, out=30] (CR2) node [above=.5cm, right=.1] {\tiny\texttt{testing}}
+		(CR2) to (CR3) to (CR4) to (CR5)
+		(C1) to (CL2) node[above=.4cm, right=.1] {\tiny\texttt{master}}
+		(CL2) to (CL3) to (CL4) to (CL5)
+	;
+
+	\pause
+	\draw[thick, black]
+		(CR4) to[in=160, out=-20] (CL5)
+	;
+\end{tikzpicture}
+}
+\end{center}
+\end{frame}
+
+\subsection{Fork}
+\begin{frame}[c, plain]{Begriff: Fork}
+\begin{center}
+\resizebox{!}{\textheight}{
+\begin{tikzpicture}
+	\visible<1->{
+	% rick's repos
+	\draw (0, 0)          pic{db} node (DBA1){} node[below=.2cm] {\texttt{proj}};
+	\draw (DBA1) ++(6, 0) pic{db} node (DBA2){} node[below=.2cm] {\texttt{rick/proj}};
+	}
+
+	% morty's repos
+	\visible<5->{
+	\draw (DBA1) ++(0,-5) pic{db} node (DBB1){} node[below=.2cm] {\texttt{proj}};
+	}
+	\visible<4->{
+	\draw (DBB1) ++(6, 0) pic{db} node (DBB2){} node[below=.2cm] {\texttt{morty/proj}};
+	}
+	
+
+	\begin{pgfonlayer}{bg}
+	\visible<1->{
+
+	% laptop background
+	\draw[blue!80, fill=blue!10!white]
+		(DBA1.north west) ++(-1.2, 3) node[black, anchor=north west, below right=.2cm]{Laptop}
+		rectangle ($(DBB1.south east) + (1.2, -1.5)$);
+
+	% server background
+	\draw[red!80, fill=red!10!white]
+		(DBA2.north west) ++(-1.2, 3) node[black, anchor=north west, below right=.2cm]{Server}
+		rectangle ($(DBB2.south east) + (1.2, -1.5)$);
+
+	}
+
+	% rick's background
+	\visible<2->{
+	\draw[magenta!80, fill=magenta!20, fill opacity=.8]
+		(DBA1.north west) ++(-2.5, 2)
+		node[black, anchor=north east, rotate=90, below left=.2cm] {Rick}
+		rectangle ($(DBA2.south east) + (2, -.8)$);
+	}
+
+	% morty's background
+	\visible<3->{
+	\draw[cyan!80, fill=cyan!20, fill opacity=.8]
+		(DBB1.north west) ++(-2.5, 2)
+		node[black, anchor=north east, rotate=90, below left=.2cm] {Morty}
+		rectangle ($(DBB2.south east) + (2, -.8)$);
+	}
+	\end{pgfonlayer}
+
+	\visible<1->{
+	% rick's arrow
+	\draw[darkgray, ultra thick, <->]
+		($(DBA1.north east)+(.75,.5)$) to node[pos=.5, above]
+		{\footnotesize\texttt{push / pull}} ($(DBA2.north west)+(-.75,.5)$);
+	}
+
+	\visible<5->{
+	% morty's arrow
+	\draw[darkgray, ultra thick, <->]
+		($(DBB1.north east)+(.75,.5)$) to node[pos=.5, above]
+		{\footnotesize\texttt{push / pull}} ($(DBB2.north west)+(-.75,.5)$);
+	}
+
+	\visible<4->{
+	% forking arrow
+	\draw[black, ultra thick, ->]
+		($(DBA2.south west)+(0,-.75)$) to node[
+			pos=.5, left=.2cm, thick, draw=red, fill=white
+		]{\textbf{\texttt{fork}}} ($(DBB2.north west)+(0,1.75)$);
+	}
+
+	% PR arrow
+	\visible<6->{
+	\draw[black, ultra thick, <-]
+		($(DBA2.south east)+(0,-.75)$) to node[
+			pos=.5, right=.2cm, thick, draw=red, fill=white
+		]{\textbf{\texttt{pull request}}} ($(DBB2.north east)+(0,1.75)$);
+	}
+
+	% \visible<6->{
+	% \draw[darkgray, ultra thick, ->]
+		% ($(DBA2.south west)+(-1,-.5)$) to[bend right] node[pos=.6, below right, rotate=30]
+		%{\texttt{pull}}($(DBB1.north east)+(.75,1.5)$);
+	% }
+\end{tikzpicture}}
+\end{center}
+\end{frame}
+
+\section{Git benutzen}
+
+\end{document}

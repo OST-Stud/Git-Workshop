@@ -1,0 +1,63 @@
+﻿\usetikzlibrary{calc}
+\usetikzlibrary{trees}
+
+\pgfdeclarelayer{bg}
+\pgfsetlayers{bg,main}
+
+\tikzset{
+	db/.pic={
+		\draw[white, fill=white](-.6,0) rectangle (.6,1.4);
+		\draw[white, fill=white](0,1.4) ellipse [x radius=.6,y radius=.15];
+		\foreach \y in {0,.5,1}
+		{
+			\draw[thick, fill=white]
+				(-0.6,\y) to [looseness=0.5,bend right=90] ++(1.2,0)
+						  to ++(0,0.4)
+						  to [looseness=0.5,bend left=90] ++(-1.2,0)
+						  to ++(0,-0.4);
+			\draw[thick] (-0.6,\y+0.4) edge[looseness=0.5,bend left=90] ++(1.2,0);
+		}
+	}
+}
+
+\begin{tikzpicture}[
+	grow via three points={
+		one child at (0.8,-0.7) and two children at (0.8,-0.7) and (0.8,-1.4)
+	},
+	edge from parent path={
+	($(\tikzparentnode\tikzparentanchor)+(.4cm,0pt)$) |- (\tikzchildnode\tikzchildanchor)
+	},
+	growth parent anchor=west,
+	parent anchor=south west,
+  ]
+	{\tikzset{
+    every node/.style={
+        draw=lightgray,
+		 fill=lightgray!40,
+        thick,
+        anchor=west,
+        inner sep=3pt,
+        minimum size=1pt,
+		 font=\ttfamily,
+	}}
+	\node (P) at (-6, 4) {Project/}
+	child { node[draw=red, fill=red!10] {.git/} }
+	child { node {src/}
+		child { node [draw=none, fill=none] {main.c} }
+		child { node [draw=none, fill=none] {build.ninja} }
+		child { node {\ldots} }
+    }
+    child [missing] {}
+    child [missing] {}
+    child [missing] {}
+    child { node {release/}
+        child { node [draw=none, fill=none] {magic} }
+        child { node [draw=none, fill=none] {awesome.a} }
+    };}
+
+	\draw[black] pic{db} node (DB) {};
+	\draw[ultra thick, darkgray, ->]
+		($(P.east)+(.2,0)$) to[out=0, in=90] ($(DB.north)+(0,1.6)$)
+	;
+	\node[below=.3cm, align=center] (DB.south) {Repository};
+\end{tikzpicture}
