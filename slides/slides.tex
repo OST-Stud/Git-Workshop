@@ -1,3 +1,4 @@
+% vim: ts=2 sw=2 et:
 \documentclass[xetex, handout]{beamer}
 \usetheme{hsr}
 
@@ -11,7 +12,6 @@
 \usepackage{amssymb}
 
 \usepackage{tikz}
-\usetikzlibrary{trees}
 
 \usetikzlibrary{backgrounds}
 \usetikzlibrary{bending}
@@ -20,14 +20,15 @@
 \usetikzlibrary{fadings}
 \usetikzlibrary{matrix}
 \usetikzlibrary{positioning}
+\usetikzlibrary{trees}
 
 \pgfdeclarelayer{bg}
 \pgfsetlayers{bg,main}
 
 \tikzset{
   db/.pic={
-    \draw[white, fill=white](-.6,0) rectangle (.6,1.4);
-    \draw[white, fill=white](0,1.4) ellipse [x radius=.6,y radius=.15];
+    \draw[white, fill=white] (-.6,0) rectangle (.6,1.4);
+    \draw[white, fill=white] (0,1.4) ellipse [x radius=.6,y radius=.15];
     \foreach \y in {0,.5,1}
     {
       \draw[thick, fill=white]
@@ -113,17 +114,18 @@
 \end{frame}
 
 \begin{frame}{Other Solutions?}
-  \begin{block}{Other Tools at Linus' Time}
+  \begin{block}{Popular at Linus' Time}
     \begin{description}
       \item[CVS] Slow to synchronize. CVS requires a centralized server which
         can get overloaded, was usually set up by the company IT.
       \item[E-Mail] People sent patch files to each other via email.
     \end{description}
   \end{block}
-  \begin{block}{Other Tools Today}
+  \begin{block}{Popular Tools Today}
     \begin{description}
       \item[Cloud Storage] Does not work offline. Their whole business model is
-        against you. You have no (real) control over when to sync.
+        against you. You have no (real) control over when to sync. Also,
+        sharepoint is garbage.
 
       \item[Mercurial (hg)] Learn to walk (Git) before you run.
     \end{description}
@@ -244,6 +246,65 @@
   \end{alertblock}
 \end{frame}
 
+\subsection{More Files: Blobs and Trees}
+
+\begin{frame}[fragile]{Solving The Problem: Multiple Files}
+  \begin{columns}
+    \begin{column}{.35\linewidth}
+      \begin{tikzpicture}[
+          grow via three points = {%
+            one child at (0.8,-0.7) and %
+              two children at (0.8,-0.7) and (0.8,-1.4)
+          },
+          edge from parent/.style = {draw,thick},
+          edge from parent path = {
+            ($(\tikzparentnode\tikzparentanchor)+(.4cm,0pt)$)
+              |- (\tikzchildnode\tikzchildanchor)
+          },
+          growth parent anchor = west,
+          parent anchor = south west,
+          every node/.style = {
+            anchor = west,
+            font = \ttfamily,
+          }
+        ]
+        \node {Project/}
+          child { node {src/}
+            child { node [draw=none, fill=none] {main.c} }
+            child { node [draw=none, fill=none] {Makefile} }
+            child { node {\ldots} }
+          }
+          child [missing] {}
+          child [missing] {}
+          child [missing] {}
+          child { node {release/}
+            child { node [draw=none, fill=none] {magic} }
+            child { node [draw=none, fill=none] {awesome.a} }
+          };
+      \end{tikzpicture}
+    \end{column}
+    \begin{column}{.65\linewidth}
+      \begin{block}{Filesystem Jargon}
+        \begin{description}[wide]
+          \item[Tree] Folder / Directory
+          \item[Blob] Binary Large OBject, raw data (bits) of file
+            content\footnote{Demo: \texttt{hexdump} vs \texttt{stat}}
+          \item[File] Blob + Metadata (Name, Date, \ldots)
+        \end{description}
+      \end{block}
+      \begin{alertblock}{Solution}
+        Treat blobs as single entity with metadata. Examples:
+        \begin{itemize}
+          \item Rename file $\Rightarrow$ Same blob, commit name change
+          \item Move file $\Rightarrow$ Same blob, commit change tree
+        \end{itemize}
+      \end{alertblock}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\subsection{Concurrent Changes: Branches and Merge}
+
 \begin{frame}[fragile]{Mathematical Digression: DAG}
   \begin{columns}
     \begin{column}{.55\linewidth}
@@ -253,13 +314,13 @@
       \end{block}
 
       \begin{block}{Partial Order}
-        DAG have a partial order relation $u \succeq v$ for all $u,v \in V$.
+        DAG have a partial order relation $u \succ v$ for comparable $u,v \in V$.
       \end{block}
 
       \begin{alertblock}{Topological Order}
-        A DAG $G = (V,A)$ has a total order $\succeq^*$ by having that for all
-        $(u, v) \in A$ $u \succeq^* v$. If $G$ has a Hamiltonian path
-        $\succeq^*$
+        A DAG $G = (V,A)$ has a total order $\succ^*$ by having that for all
+        $(u, v) \in A$ $u \succ^* v$. If $G$ has a Hamiltonian path
+        $\succ^*$
         is unique.
       \end{alertblock}
     \end{column}
@@ -338,33 +399,13 @@
   \end{columns}
 \end{frame}
 
-\subsection{More Files: Blobs and Trees}
-
-\begin{frame}[fragile]{Solving The Problem: Multiple Files}
-  \begin{columns}
-    \begin{column}{.5\linewidth}
-      % \begin{tikzpicture}
-      %   \node {Project/}
-      %     child { node {src/}
-      %       child { node [draw=none, fill=none] {main.c} }
-      %       child { node [draw=none, fill=none] {Makefile} }
-      %       child { node {\ldots} }
-      %     }
-      %     child [missing] {}
-      %     child [missing] {}
-      %     child [missing] {}
-      %     child { node {release/}
-      %       child { node [draw=none, fill=none] {magic} }
-      %       child { node [draw=none, fill=none] {awesome.a} }
-      %     };
-      % \end{tikzpicture}
-    \end{column}
-    \begin{column}{.5\linewidth}
-    \end{column}
-  \end{columns}
+\begin{frame}{Solving The Problem: Concurrent Changes III}
 \end{frame}
 
-\subsection{Many Computers: Branches and Remotes}
+\begin{frame}{Solving The Problem: Concurrent Changes IV}
+\end{frame}
+
+\subsection{Many Computers: Remotes}
 
 \begin{frame}{Solving The Problem: Other Computers I}
   remote branches
@@ -389,10 +430,11 @@
         \begin{enumerate}
           \item Given $y = h(x)$ it is hard to find $x$
           \item It is hard to find $x,y \in \Omega$ s.t. $h(x) = h(y)$
-          \item Given $x$ it is hard to find $y$ s.t. $h(x) = h(y)$
+	  \item Given $h(x)$ it is hard to find $y$ s.t. $h(x) = h(y)$
           \item Given $h(x)$ and a function $f$ it is hard to find $h(f(x))$
         \end{enumerate}
       \end{block}
+      Hashes are \emph{not} unique!
     \end{column}
     \begin{column}{.5\linewidth}
       \begin{block}{Merkle DAG}
@@ -415,7 +457,10 @@
   \end{columns}
 \end{frame}
 
-\subsection{Git}
+\begin{frame}[fragile]{Mathematical Digression: Visualizing Merkle DAGs}
+\end{frame}
+
+\subsection{The Interface of Git}
 
 \begin{frame}[fragile]{Git Commits}
   \begin{block}{Commit Contents}
@@ -432,30 +477,96 @@ commit 1cfdf5c198f1c74c2f894067baf4670f5bca8e70
 Author: Nao Pross <np@0hm.ch>
 Date:   Wed Feb 9 19:53:06 2022 +0100
 
-    Fix arrayobject.h path on Debian based distros
-    
-    On Debian Linux and its derivatives such as Ubuntu and LinuxMint, Python
-    packages installed through the package manager are kept in a different
-    non-standard directory called 'dist-packages' instead of the normal
-    'site-packages' [1].
-    
-    To detect the Linux distribution the 'platform' library (part of the
-    Python stdlib) provides a function 'platform.freedesktop_os_release()'
-    that parses a standard file '/etc/os-release' available in most Linux
-    distributions [2]. However this function is rather new (Python >= 3.10)
-    and unavailable in most python installations, so the core of its
-    functionaly was reimplemented here.
-    
-    [1]: https://wiki.debian.org/Python#Deviations_from_upstream
-    [2]: https://docs.python.org/3/library/platform.html#linux-platforms
-    
-    Signed-off-by: Jonas Schmid <schmid@stettbacher.ch>
+  Fix arrayobject.h path on Debian based distros
+  
+  On Debian Linux and its derivatives such as Ubuntu and LinuxMint, Python
+  packages installed through the package manager are kept in a different
+  non-standard directory called 'dist-packages' instead of the normal
+  'site-packages' [1].
+  
+  To detect the Linux distribution the 'platform' library (part of the
+  Python stdlib) provides a function 'platform.freedesktop_os_release()'
+  that parses a standard file '/etc/os-release' available in most Linux
+  distributions [2]. However this function is rather new (Python >= 3.10)
+  and unavailable in most python installations, so the core of its
+  functionaly was reimplemented here.
+  
+  [1]: https://wiki.debian.org/Python#Deviations_from_upstream
+  [2]: https://docs.python.org/3/library/platform.html#linux-platforms
+  
+  Signed-off-by: Jonas Schmid <schmid@stettbacher.ch>
 \end{verbatim}
   \end{exampleblock}
 \end{frame}
 
 \begin{frame}{Git Repositories}
+  \begin{columns}
+    \begin{column}{.6\linewidth}
+      \begin{tikzpicture}[
+          grow via three points = {%
+            one child at (0.8,-0.7) and %
+            two children at (0.8,-0.7) and (0.8,-1.4)
+          },
+          edge from parent/.style = {draw, thick},
+          edge from parent path = {
+            ($(\tikzparentnode\tikzparentanchor)+(.4cm,0pt)$)
+              |- (\tikzchildnode\tikzchildanchor)
+          },
+          growth parent anchor=west,
+          parent anchor=south west,
+          every node/.style={
+            anchor=west,
+          },
+        ]
+
+        \begin{scope}[font=\ttfamily]
+        \node [draw=gray, fill = lightgray!20] (P) at (-5, 4) {Project/}
+          child { node (G) [draw=red, fill=red!10] {.git/} }
+          child { node {src/}
+            child { node [draw=none, fill=none] {main.c} }
+            child { node [draw=none, fill=none] {Makefile} }
+            child { node {\ldots} }
+            }
+            child [missing] {}
+            child [missing] {}
+            child [missing] {}
+            child { node {release/}
+                child { node [draw=none, fill=none] {magic} }
+                child { node [draw=none, fill=none] {awesome.a} }
+            };
+        \end{scope}
+
+        \visible<2->{
+          \draw[black] pic{db} node (DB) {};
+          \node[below=.3cm, align=center] (DB.south) {Repository};
+
+          \draw[very thick, ->]
+            ($(G.east)+(.2,0)$) to[out=0, in=90] ($(DB.north)+(0,1.6)$);
+
+          \node[right = 2cm of P, font=\bfseries] (W) {Work Tree};
+          \draw[very thick, <-] ($(P.east)+(.2,0)$) -- (W);
+        }
+      \end{tikzpicture}
+    \end{column}
+    \begin{column}{.4\linewidth}
+      \begin{block}{Work Tree}
+        Root of your project, contains \texttt{.git}.
+        \textbf{Never delete \texttt{.git}}.
+      \end{block}
+
+      \begin{block}{Repository}
+        \begin{itemize}
+          \item Commit graph (Blobs, \ldots)
+          \item Staging Area (will come next)
+        \end{itemize}
+      \end{block}
+    \end{column}
+  \end{columns}
 \end{frame}
+
+\section{Using Git}
+
+\subsection{The Conceptual Areas}
 
 \begin{frame}[fragile]{The 3 (or 4) Conceptual Areas of Git}
   \begin{columns}
@@ -580,10 +691,28 @@ Date:   Wed Feb 9 19:53:06 2022 +0100
   \end{columns}
 \end{frame}
 
+\subsection{Branches and Merges}
+
 \begin{frame}{Branches, Remotes and your HEAD}
 \end{frame}
 
-\subsection{Forks, GitHub and Others}
+\subsection{Best Practices}
+
+\begin{frame}{What is a Commit?}
+\end{frame}
+
+\begin{frame}{Trunk, Feature Branches}
+\end{frame}
+
+\begin{frame}{Releases and Tags}
+\end{frame}
+
+\subsection{Forks}
+
+\begin{frame}{Forking Projects}
+\end{frame}
+
+\subsection{GitHub and Others}
 
 \begin{frame}{Git Services (GitHub, GitLab, \ldots)}
 \end{frame}
@@ -677,9 +806,8 @@ Date:   Wed Feb 9 19:53:06 2022 +0100
   }
 \end{frame}
 
-\section{Old}
-
-
+\iffalse
+\section{Old Stuff}
 
 \subsection{Repository}
 \begin{frame}{Begriff: Repository}
@@ -1098,7 +1226,6 @@ Someone else has also edited this line
 }
 \end{center}
 \end{frame}
-
-\section{Git benutzen}
+\fi
 
 \end{document}
