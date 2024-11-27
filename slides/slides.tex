@@ -71,6 +71,7 @@
 
 
 \title{Introduction to Git}
+\subtitle{``The stupid content tracker''}
 \author{
   Naoki Pross --- \texttt{np@0hm.ch}
 }
@@ -112,6 +113,9 @@
     \end{column}
   \end{columns}
 \end{frame}
+
+% \begin{frame}{About You and Me}
+% \end{frame}
 
 \section{The Problem}
 
@@ -1133,14 +1137,14 @@
           h : V \times \{0,1\}^d \to \{0,1\}^d
         \]
         that defines a label function
-        \[
-          \ell(\{v\}) = h(v, \ell(\operatorname{neighbors}^+(v)))
-        \]
+        \begin{align*}
+          \ell(v) &= h\left(v, \sum_{u \in \operatorname{n}^+(v)} \ell(u) \right)
+        \end{align*}
       \end{block}
       \begin{alertblock}{Properties}
         \begin{itemize}
           \item Immutable data structure
-          \item Has cryptographic verification
+          \item Cryptographic verification
         \end{itemize}
       \end{alertblock}
     \end{column}
@@ -1148,6 +1152,70 @@
 \end{frame}
 
 \begin{frame}[fragile]{Mathematical Digression: Visualizing Merkle DAGs}
+  \begin{columns}
+    \begin{column}{\linewidth}
+      To compute the label of a node, you need to first compute the label of
+      all nodes on which it depends. Changing a label has a cascading effect on
+      descendents.
+      \vspace{5mm}
+      \begin{tikzpicture}
+        \matrix (m) [
+          row sep = 2mm, column sep = 10mm,
+          matrix of nodes, nodes = {
+            circle, draw, thick, fill=orange,
+            inner sep = 0pt, outer sep = 1mm, minimum size = 2.5mm,
+          }
+        ] {
+          & |[label={120:B}] (B)| {}
+          &
+          &
+          & |[label={ 90:H}] (H)| {}
+          \\
+            |[label={100:A}] (A)| {}
+          &
+          &
+          & |[label={ 90:E}] (E)| {}
+          \\
+          & |[label={ 90:C}] (C)| {}
+          & |[label={ 90:D}] (D)| {}
+          &
+          & |[label={ 90:G}] (G)| {}
+          \\
+          &
+          &
+          & |[label={ 90:F}] (F)| {}
+          \\
+        };
+
+        \begin{scope}[thick, <-]
+          \draw (A) to[bend left] (B);
+          \draw (B) to[out = 0, in = 120] (E);
+          \draw (E) to[bend left] (H);
+
+          \draw (A) -- (E);
+          
+          \draw (A) to[bend right] (C);
+          \draw (C) -- (D);
+          \draw (D) to[bend right] (E);
+          \draw (E) to[bend right] (G);
+
+          \draw (D) to[bend right] (F);
+          \draw (F) to[bend right] (G);
+        \end{scope}
+
+        \node[below left = 1mm, rotate=30]  at (A) {$h(\mathsf{A}, 0)$};
+        \node[above right = 2mm, rotate=30] at (B) {$h(\mathsf{B}, \ell(\mathsf{A}))$};
+        \node[right = 2mm] at (E) {$h(\mathsf{E}, 
+          \ell(\mathsf{A}) \oplus \ell(\mathsf{B}) \oplus \ell(\mathsf{D})))$};
+
+        \node[below left = 2mm, rotate=30, anchor = east] at (C) {$h(\mathsf{C}, \ell(\mathsf{A}))$};
+        \node[below left = 2mm, rotate=30, anchor = east] at (D) {$h(\mathsf{D}, \ell(\mathsf{C}))$};
+        \node[below = 2mm] at (F) {$h(\mathsf{F}, \ell(\mathsf{D}))$};
+        \node[right = 2mm] at (H) {$h(\mathsf{H}, \ell(\mathsf{E}))$};
+        \node[right = 2mm] at (G) {$h(\mathsf{G}, \ell(\mathsf{E}) \oplus \ell(\mathsf{F}))$};
+      \end{tikzpicture}
+    \end{column}
+  \end{columns}
 \end{frame}
 
 \subsection{Git Commits}
@@ -1230,7 +1298,7 @@ Date:   Wed Feb 9 19:53:06 2022 +0100
 
         \visible<2->{
           \draw[black] pic{db} node (DB) {};
-          \node[below=.3cm, align=center] (DB.south) {Repository};
+          \node[below=.3cm, align=center, text width = 2cm] (DB.south) {Repository (index)};
 
           \draw[very thick, ->]
             ($(G.east)+(.2,0)$) to[out=0, in=90] ($(DB.north)+(0,1.6)$);
