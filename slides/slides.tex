@@ -501,8 +501,8 @@
   \begin{columns}[t]
     \begin{column}{.5\linewidth}
       \begin{block}{Branch (informal)}
-        Branches are arc-disjoint subgraphs from a common anchestor in the
-        commit graph.
+        Branches are subgraphs (subtrees) from a common anchestor in the commit
+        graph.
       \end{block}
       \begin{alertblock}{Naming Branches}
         Branch names are labels on their most recent commit.
@@ -593,7 +593,7 @@
       \begin{alertblock}{FF-Merge}
         Apply changes of commits in \texttt{BY} starting at \texttt{BX} until
         you get to \texttt{BY}. Or \texttt{BX} just needs to ``catch up'' to
-        \texttt{BY}.
+        \texttt{BY}. No new commits are created.
       \end{alertblock}
     \end{column}
   \end{columns}
@@ -643,7 +643,7 @@
           },
         ] {
              &    & |[fill=magenta]| {} & |[fill=magenta]| {} \\
-          {} & {} & |[fill=teal]| {} & & |[fill=teal]| {} \\
+          {} & {} & |[fill=teal]| {} & & |[fill=hsr-blue]| {} \\
         };
 
         \begin{scope}[thick, <-]
@@ -678,6 +678,7 @@
           \item ``our'' changes are from \texttt{BX}
           \item ``their'' changes are from \texttt{BY}
         \end{itemize}
+        Need to make choices, which get saved in a new merge commit.
       \end{alertblock}
     \end{column}
   \end{columns}
@@ -685,9 +686,70 @@
 
 \begin{frame}[fragile]{Solving the Problem: 3-Way-Merge II}
   \begin{columns}
-    \begin{column}{.5\linewidth}
+    \begin{column}{.55\linewidth}
+      \begin{tikzpicture}
+        \node[draw, very thick, teal, fill=teal!20,
+          circle, minimum size = 20mm] (oc) {};
+
+        \node[draw, very thick, magenta, fill=magenta!20, 
+          circle, minimum size = 20mm, right = 15mm of oc] (tc) {};
+
+        \node[above right = 1cm, font=\ttfamily] at (oc) {BX};
+        \node[above right = 1cm, font=\ttfamily] at (tc) {BY};
+
+        \draw (oc) pic{file = {of ours {}}};
+        \draw (tc) pic{file = {tf theirs {}}};
+
+        \node[draw, very thick, hsr-blue, fill=hsr-blue20,
+          rounded corners = 5mm, minimum width = 5cm, minimum height = 2cm]
+          (mc) at ($(oc)!0.5!(tc) - (0,4)$) {};
+
+        \node[draw, thick, black, fill = white,
+          minimum width = 4cm, minimum height = 1cm,]
+          (mf) at (mc) {merged};
+
+        \node[below] at (mc.south) {Merge \texttt{BY} into \texttt{BX}};
+
+        \begin{scope}[black, line width = 1mm]
+          \draw[<-] (oc.south) -- (mc);
+          \draw[<-] (tc.south) -- (mc);
+          \draw[] (oc.north) -- ++ (0,1);
+          \draw[] (tc.north) -- ++ (0,1);
+        \end{scope}
+
+        \foreach \k/\w [count=\i] in {0/9, 1.2/5, 2.3/6, 3.2/2} {
+          \node[draw, thick, teal, fill=teal!40,
+            minimum height = 1cm, minimum width = \w,
+            opacity = .5, inner sep = 0pt, anchor = west,
+          ] (moc-\i) at ($(mf.west) + (\k,0)$) {};
+          
+          \draw[teal, thick, ->] (of) to[out=-90, in=90] ({moc-\i}.north);
+        }
+
+        \foreach \k/\w [count=\i] in {.6/2, 1.4/9, 3/4} {
+          \node[draw, thick, magenta, fill=magenta!40,
+            minimum height = 1cm, minimum width = \w,
+            opacity = .5, inner sep = 0pt, anchor = west,
+          ] (mtc-\i) at ($(mf.west) + (\k,0)$) {};
+
+          \draw[magenta, thick, ->] (tf) to[out=-90, in=90] ({mtc-\i}.north);
+        }
+      \end{tikzpicture}
     \end{column}
-    \begin{column}{.5\linewidth}
+    \begin{column}{.45\linewidth}
+      \begin{alertblock}{3-Way-Merge}
+        \begin{itemize}
+          \item Use a (3-way-merge) algorithm to merge trees and blobs from
+            each commit
+
+          \item If not possible the user has to choose between `our' changes
+            and `their' changes
+        \end{itemize}
+      \end{alertblock}
+      \begin{block}{Merge Conflict}
+        When the algorithm cannot merge the file automatically it is called
+        \emph{merge conflict}.
+      \end{block}
     \end{column}
   \end{columns}
 \end{frame}
@@ -891,7 +953,11 @@
       \begin{block}{Fetch}
         Copy the changes of the remote git graph into your local git graph.
       \end{block}
+      \begin{exampleblock}{Running Example}
+        Alice fetches Bob's changes.
+      \end{exampleblock}
       \begin{alertblock}{Remote Branches}
+        \footnotesize
         A branch that represents changes done in another machine. When a graph
         is cloned, the machine from which it was cloned has the default name
         \texttt{origin}.
