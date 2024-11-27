@@ -69,9 +69,14 @@
   },
 }
 
-
-\title{Introduction to Git}
-\subtitle{``The stupid content tracker''}
+\title{
+  Introduction to Git
+}
+\subtitle{
+  ``The stupid\footnote{
+    \emph{git} (British) -- a foolish or worthless person}
+  content tracker''
+}
 \author{
   Naoki Pross --- \texttt{np@0hm.ch}
 }
@@ -704,6 +709,13 @@
         \draw (oc) pic{file = {of ours {}}};
         \draw (tc) pic{file = {tf theirs {}}};
 
+        \begin{scope}
+          \clip (oc) circle[radius=1cm];
+          \node[opacity=.08] at (oc) {
+            \includegraphics[width=3cm]{pic/ours}
+          };
+        \end{scope}
+
         \node[draw, very thick, hsr-blue, fill=hsr-blue20,
           rounded corners = 5mm, minimum width = 5cm, minimum height = 2cm]
           (mc) at ($(oc)!0.5!(tc) - (0,4)$) {};
@@ -1138,7 +1150,8 @@
         \]
         that defines a label function
         \begin{align*}
-          \ell(v) &= h\left(v, \sum_{u \in \operatorname{n}^+(v)} \ell(u) \right)
+          \ell(v) &= h\biggl(v, 
+            \sum_{u \in \operatorname{n}^+(v)} \ell(u) \biggr)
         \end{align*}
       \end{block}
       \begin{alertblock}{Properties}
@@ -1456,9 +1469,117 @@ Date:   Wed Feb 9 19:53:06 2022 +0100
 \begin{frame}{Branches, Remotes and your HEAD}
 \end{frame}
 
-\begin{frame}{Auomatic Merge Failed (Conflicts)}
-  Most common issue (mentioned in XKCD)
+\begin{frame}[fragile]{Auomatic Merge Failed (Conflicts)}
+  \begin{columns}
+    \begin{column}{.95\paperwidth}
+      \centering
+      \begin{tikzpicture}[]
+        % \draw[gray,step=0.25] (-2, -5) grid (10, 2.5);
+        % \clip (-2, -5) rectangle (10, 2.5);
+        \node (tracked) at (0,0) [on background layer, 
+          draw, thick, hsr-mauve, fill=hsr-mauve20,
+          minimum width = 3cm, minimum height = 3cm,
+        ] {};
+
+        \node (fs) at ($(tracked.north) + (0, .25)$) [
+          on background layer,
+          anchor = north,
+          draw, thick, gray, dashed,
+          minimum width = 3.5cm, minimum height = 6.5cm,
+        ] {};
+
+        \node (staged) [on background layer, 
+          right = 1cm of tracked.north east, anchor = north west,
+          draw, thick, hsr-blue, fill=hsr-blue20,
+          minimum width = 3cm, minimum height = 6cm,
+        ] {};
+
+        \node (graph) [on background layer, 
+          right = 1cm of staged.north east, anchor = north west,
+          draw, thick, hsr-lakegreen, fill=hsr-lakegreen20,
+          minimum width = 3cm, minimum height = 6cm,
+        ] {};
+
+        \node (storage) at ($(staged.north west) + (-.25, .25)$) [
+          on background layer,
+          anchor = north west,
+          draw, thick, gray, dashed,
+          minimum width = 7.5cm, minimum height = 6.5cm,
+        ] {};
+
+        % area labels
+        \node at (tracked.north west)
+          [anchor = north west, font = \bfseries] {Tracked};
+
+        \node at (staged.north west)
+          [anchor = north west, font = \bfseries] {Staging Area};
+
+        \node at (graph.north west)
+          [anchor = north west, font = \bfseries] {Commit Graph};
+
+        \node at (fs.north west)
+          [anchor = south west, font = \bfseries, gray] {Work Tree};
+
+        \node at (tracked.south west)
+          [anchor = north west, gray] {Untracked};
+
+        \node at (storage.north west)
+          [anchor = south west, font = \bfseries, gray] {Storage \texttt{.git}};
+
+        % commit graph
+        \matrix (m) at (graph) [
+          row sep = 8mm, column sep = 5mm,
+          matrix of nodes,
+          nodes = {
+            draw, thick, circle, fill = orange,
+            inner sep = 0pt, outer sep = .5mm, minimum size = 2mm,
+          }
+        ] {
+          {} \\
+          {} & {} \\
+          {} & {} \\
+          |(commit) [fill=magenta]| {} \\
+        };
+
+        \begin{scope}[thick, <-]
+          \draw (m-1-1) -- (m-2-1);
+          \draw (m-2-1) -- (m-3-1);
+          \draw[dashed] (m-3-1) -- (commit);
+
+          \draw (m-1-1) to[out=-90, in=90] (m-2-2);
+          \draw (m-2-2) -- (m-3-2);
+          \draw[dashed] (m-3-2) to[out=-90, in=90] (commit);
+        \end{scope}
+
+        % files
+        \draw (tracked) pic{file = {fc ERR {}}};
+        \draw (staged |- tracked) pic{file = {fm OK {}}};
+
+        \draw pic{file = {u {} {below = 1cm of tracked.south}}};
+        \draw (u -| as) pic{file = {ff FIX  {}}};
+
+        \node[below = 1mm of fm.south, text width = 20mm, font=\footnotesize] {merged \newline automatically};
+        \node[below = 1mm of ff.south, text width = 25mm, font=\footnotesize] {merged by hand};
+
+        \draw[very thick, ->] (fc) to[out = -60, in = 120]
+          node[midway, above = 2mm, sloped, fill=white] {resolve}
+          node[midway, below = 2mm, sloped, fill=white] {\& add} (ff);
+
+        % Commit
+        \draw[draw = magenta, thick, fill = magenta!80, path fading = west] 
+          (as.north east) -- (commit.west) -- (us.south east) -- cycle;
+
+        \path (us.south east) -- node (M) [pos = .35] {} (as.north east);
+        \path (M) -- node [pos = .85, sloped, font={\bfseries\large},
+          black, anchor = east] {commit} (commit.west);
+
+        % \draw[black] (current bounding box.north west) 
+        %   rectangle (current bounding box.south east);
+      \end{tikzpicture}
+    \end{column}
+  \end{columns}
 \end{frame}
+
 
 \subsection{Best Practices}
 
