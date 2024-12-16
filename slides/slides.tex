@@ -109,7 +109,7 @@
         \begin{enumerate}
           \item A tiny bit of graph theory and even less cryptography
           \item Understand (instead of memorizing) Git
-          \item Flex on your n00b friends by finding what caused a bug using a
+          \item Flex on your friends by finding what caused a bug using a
             logarithmic search over the directed acyclic graph that represents
             the change history
           \item Put it on your CV and profit
@@ -156,7 +156,9 @@
         against you. You have no (real) control over when to sync. Also,
         sharepoint is garbage. No way to compare changes.
 
-      \item[Mercurial (hg)] Learn to walk (Git) before you run.
+      \item[Mercurial] Less popular than Git, used by Mozilla.
+
+      \item[Jujitsu] Git-compatible VCS, even less popular and very new.
     \end{description}
   \end{block}
 \end{frame}
@@ -1136,7 +1138,7 @@
         \begin{enumerate}
           \item Given $y = h(x)$ it is hard to find $x$
           \item It is hard to find $x,y \in \Omega$ s.t. $h(x) = h(y)$
-	  \item Given $h(x)$ it is hard to find $y$ s.t. $h(x) = h(y)$
+          \item Given $h(x)$ it is hard to find $y$ s.t. $h(x) = h(y)$
           \item Given $h(x)$ and a function $f$ it is hard to find $h(f(x))$
         \end{enumerate}
       \end{block}
@@ -1150,7 +1152,7 @@
         \]
         that defines a label function
         \begin{align*}
-          \ell(v) &= h\biggl(v, 
+          \ell(v) &= h\biggl(v,
             \sum_{u \in \operatorname{n}^+(v)} \ell(u) \biggr)
         \end{align*}
       \end{block}
@@ -1206,7 +1208,7 @@
           \draw (E) to[bend left] (H);
 
           \draw (A) -- (E);
-          
+
           \draw (A) to[bend right] (C);
           \draw (C) -- (D);
           \draw (D) to[bend right] (E);
@@ -1227,6 +1229,7 @@
         \node[right = 2mm] at (H) {$h(\mathsf{H}, \ell(\mathsf{E}))$};
         \node[right = 2mm] at (G) {$h(\mathsf{G}, \ell(\mathsf{E}) \oplus \ell(\mathsf{F}))$};
       \end{tikzpicture}
+      {\footnotesize Technicality: Sum symbol represents hash concatenation.}
     \end{column}
   \end{columns}
 \end{frame}
@@ -1580,6 +1583,39 @@ Date:   Wed Feb 9 19:53:06 2022 +0100
   \end{columns}
 \end{frame}
 
+\subsection{Time Travel}
+
+\begin{frame}{Restoring Changes from the Past}
+
+\end{frame}
+
+\subsection{Command Line vs GUI}
+
+\begin{frame}{Graphical User Interfaces}
+  \begin{block}{Command Line Interface}
+    If you learn to use Git on the terminal you are set forever, but
+    \begin{itemize}
+      \item you have to think (tip: use \texttt{git status}!)
+    \end{itemize}
+  \end{block}
+  \begin{alertblock}{Graphical Interfaces}
+    A good GUI that does not hide complexity
+    \begin{itemize}
+      \item Sublime Merge
+    \end{itemize}
+    Alternatives
+    \begin{itemize}
+      \item SourceTree, GitKraken
+      \item TortoiseGit (integrates with Windows Explorer)
+    \end{itemize}
+    Bad GUI (why? It tries to hide complexity until you inevitabily screw up
+    something, and then you have no clue what is going on)
+    \begin{itemize}
+      \item GitHub Desktop
+    \end{itemize}
+    More at \url{https://git-scm.com/downloads/guis}
+  \end{alertblock}
+\end{frame}
 
 \subsection{Best Practices}
 
@@ -1592,12 +1628,10 @@ Date:   Wed Feb 9 19:53:06 2022 +0100
 \begin{frame}{Releases and Tags}
 \end{frame}
 
-\subsection{GitHub and Others}
+\subsection{GitHub and Others, Fork}
 
 \begin{frame}{Git Services (GitHub, GitLab, \ldots)}
 \end{frame}
-
-\subsection{Forks}
 
 \begin{frame}{Forking Projects}
 \end{frame}
@@ -1693,188 +1727,300 @@ Date:   Wed Feb 9 19:53:06 2022 +0100
 
 \section{Extras (to flex)}
 
+\subsection{Logarithmic Search}
+
 \begin{frame}[fragile]{Mathematical Digression: Logarithmic Search I}
-  \begin{columns}
-    \begin{column}{.5\linewidth}
-      \centering
-      \begin{tikzpicture}[
-          point/.style = {
-            draw, circle, fill=lightgray, minimum size=1mm,
-            inner sep = 0pt, thick,
-          }
-        ]
-        % \draw[gray, densely dotted, step=.5] grid (5, 3);
-        % \draw[thick, -latex] (0,0) -- (.5,0) node[right] {$\hat{\mathbf{x}}$};
-        % \draw[thick, -latex] (0,0) -- (0,.5) node[above] {$\hat{\mathbf{y}}$};
-
-        % \node[point, label={60:$p_1$}] at (1.3,1.6) {};
-        % \node[point, label={60:$p_4$}] at (2.3,0.9) {};
-        % \node[point, label={60:$p_5$}] at (3.1,2.2) {};
-        % \node[point, label={60:$p_3$}] at (3.9,1.1) {};
-        % \node[point, label={60:$p_2$}] at (2.9,0.4) {};
-        % \node[point, label={60:$p_6$}] at (0.7,2.4) {};
-        % \node[point, label={60:$p_2$}] at (1.1,0.5) {};
-
-        % \node (Q) at (2.75,1.7) [
-        %   thick, draw=gray, fill = gray!50, opacity=.35,
-        %   minimum width = 1.75cm, minimum height = .7cm,
-        %   anchor = south west,
-        % ] {$Q$};
-
-        % \draw[thick, draw=red!80!black, fill=red, opacity=.2] 
-        %   (0,0) rectangle (2.5, 3);
-
-        % \draw[thick, draw=magenta!80!black, fill=magenta, opacity=.2]
-        %   (2.5,0) rectangle (5, 1.5);
-
-        % \draw[thick, draw=blue!80!black, fill=blue, opacity=.2]
-        %   (2.5,1.5) rectangle (3.75,3);
-      \end{tikzpicture}
-
-      \vspace{5mm}
-
-      \begin{tikzpicture}[
-          every node/.style = {
-            draw, circle, fill=red!40, minimum size=1.4mm,
-            inner sep = 0pt, thick, font = \tiny,
-          },
-          edge from parent/.style = { draw, semithick },
-          level distance = 5mm,
-          level 1/.style = { sibling distance = 30mm, nodes = { fill = red!40, }, },
-          level 2/.style = { sibling distance = 15mm, nodes = { fill = magenta!40, }, },
-          level 3/.style = { sibling distance = 7.5mm, nodes = { fill = blue!40, }, },
-          level 4/.style = {
-            sibling distance = 5mm,
-            level distance = 8mm,
-            edge from parent/.append style = { densely dotted },
-            nodes = { fill = none, draw = none, font = \footnotesize},
-          },
-        ]
-        \node[fill = black, label={90:T}] {}
-          child {
-            node[label={100:L}] {}
-            child {
-              node[label={100:U}] {}
-              child { node[label={100:L}] {} child { node {$p_6$} } }
-              child { node[label={60:R}] {} child { node {$p_1$} } }
-            }
-            child {
-              node[label={60:D}] {}
-              child { node[label={100:L}] {} child { node {$p_2$} } }
-              child { node[label={60:R}] {} child { node {$p_4$} } }
-            }
-          }
-          child {
-            node[label={60:R}] {}
-            child {
-              node[label={100:U}] {}
-              child { node[label={100:L}] {} child { node {$p_5$} } }
-              child[missing] { node[label={60:R}] {} child { node {} } }
-            }
-            child {
-              node[label={60:D}] {}
-              child { node[label={100:L}] {} child { node {$p_2$} } }
-              child { node[label={60:R}] {} child { node {$p_3$} } }
-            }
-          }
-        ;
-      \end{tikzpicture}
-    \end{column}
-    \begin{column}{.5\linewidth}
+  \begin{center}
+    \begin{tikzpicture}
+      \draw[very thick, ->] (0,0) -- (9,0) node[above] {$\mathbb{R}$};
+      \foreach \x/\w [count=\i] in {.5/1, 5.5/1.5, 3/1.2, 7.8/.3} {
+        \node[fill=hsr-mauve, opacity=.8,
+          minimum height = 2mm, minimum width = {1cm*\w},
+          anchor = west, label={90:$J_{\i}$},
+        ] (J\i) at (\x, 0) {};
+      };
+      \node[circle, fill=black, inner sep=0pt, minimum size=1mm] at (J3.east) {};
+      \node[circle, fill=black, inner sep=0pt, minimum size=1mm] at (J3.west) {};
+      \node[below] at (J3.south west) {$a_3$};
+      \node[below] at (J3.south east) {$b_3$};
+    \end{tikzpicture}
+  \end{center}
+  \begin{columns}[t]
+    \begin{column}{.45\linewidth}
       \begin{block}{Toy Problem}
         Given a set of disjoint intervals $S = \{J_1, \ldots, J_n\}$, $J_i
-        \subset \mathbb{R}$ find to which interval belongs $q \in \bigcup_i
-        J_i$.
+        \subset \mathbb{R}$, $\log_2(n) \in \mathbb{N}$ find to which interval
+        belongs $q \in \bigcup_i J_i$.
       \end{block}
       \begin{block}{Naive Solution}
-        For every $J_i \in S$ interval check if $q \in J_i$. This is $O(n)$.
+        For every $J \in S$ interval check if $q \in J$. This is $O(n)$.
       \end{block}
-      \begin{alertblock}{Logarithmic Search Intuition}
-        Intervals can be ordered
+    \end{column}
+    \begin{column}{.55\linewidth}
+      \begin{alertblock}{Total Order in $S$}
+        Intervals $[a, b) \in S$ can be ordered. Define 
+        $J_i \succ J_j$ if $a_i > a_j$.
       \end{alertblock}
+      \begin{block}{Logarithmic Search Intuition}
+        If $q \notin J = [a,b)$ then either
+        \begin{itemize}
+          \item $q > a$ so $q \in J' \succ J$
+          \item $q < a$ and $q \in J' \prec J$
+        \end{itemize}
+      \end{block}
     \end{column}
   \end{columns}
 \end{frame}
 
 \begin{frame}{Mathematical Digression: Logarithmic Search II}
   \begin{columns}
-    \begin{column}{.6\linewidth}
-      \begin{block}{Chopping the Search Space}
-        Recursively partition $A \subset \mathbb{R}^2$ containing points into
-        disjoint subsets
-        \begin{align*}
-          A &= A_\mathsf{R} \cup A_\mathsf{L}\\
-          A_\mathsf{L} &= A_\mathsf{LU} \cup A_\mathsf{RU} &
-          A_\mathsf{R} &= A_\mathsf{RU} \cup A_\mathsf{LU} \\
-          A_\mathsf{LU} &= A_\mathsf{LUL} \cup A_\mathsf{LUR} & 
-          A_\mathsf{RU} &= \ldots 
-        \end{align*}
+    \begin{column}{.5\linewidth}
+      \begin{block}{Logarithmic Search Intuition}
+        If $q \notin J = [a,b)$ then either
+        \begin{itemize}
+          \item $q > a$ so $q \in J' \succ J$
+          \item $q < a$ and $q \in J' \prec J$
+        \end{itemize}
       \end{block}
-
-      \begin{alertblock}{Observation}
-        At every level $A = A_\mathsf{X}\cup A_\mathsf{Y}$
-        \begin{enumerate}
-          \item If $Q \cap A_\mathsf{X} = \emptyset$ then $Q \subset A_\mathsf{Y}$
-          \item If $Q \cap A_\mathsf{Y} = \emptyset$ then $Q \subset A_\mathsf{X}$
-          \item Otherwise $Q \subset R$
-        \end{enumerate}
-      \end{alertblock}
-    \end{column}
-    \begin{column}{.4\linewidth}
-      \begin{alertblock}{Logarithmic Search}
-        Start with $A$ and in each case do
-        \begin{enumerate}
-          \item Repeat with $A := A_\mathsf{Y}$
-          \item Repeat with $A := A_\mathsf{X}$
-          \item Check $p \in Q$ for all $p \in A$
-        \end{enumerate}
-        Does not check every $p \in P$ (fast for large $n$!).
+      \begin{alertblock}{Idea}
+        Recursively apply intuition.
       \end{alertblock}
       \begin{block}{Complexity (Landau)}
-        Base $b$ logarithmic search is $\mathcal{O}(\log_b(n))$. In this case
-        $b = 2$.
+        Base $b$ logarithmic search is $O(\log_b(n))$. In this case
+        $b = 2$ (two options $q > a$ or $q < a$), so it usually called
+        \emph{binary} search.
       \end{block}
+    \end{column}
+    \begin{column}{.5\linewidth}
+      \begin{alertblock}{Logarithmic Search}
+        Start with $Q = S$ then
+        \begin{enumerate}
+          \item take $J \in Q$ in the ``middle'' of $Q$ and if $q \in Q$ we are done
+          \item otherwise
+            \begin{enumerate}
+              \item if $q > a$ repeat with $Q := \{J' \in Q : J' \succ J\}$
+              \item if $q < a$ repeat with $Q := \{J' \in Q : J' \prec J\}$
+            \end{enumerate}
+        \end{enumerate}
+        Does not check every $J \in S$ (fast for large $n$!).
+      \end{alertblock}
     \end{column}
   \end{columns}
 \end{frame}
 
-\begin{frame}{Git Bisect Theory}
+\begin{frame}[fragile]{Mathematical Digression: Logarithmic Search III}
+  We can visualize the decisions of logarithmic searching as a tree. The
+  decision goes to the left or right branch depending on whether $q < a$ or $q
+  > a$ respectively. Obseve that the tree has depth $3 = \log_2(8)$.
+
+  \vspace{5mm}
+
+  \begin{tikzpicture}[
+      dot/.style = {
+        draw, solid, thick, fill=hsr-blue, circle,
+        minimum size = 2mm, inner sep = 0pt,
+      }
+    ]
+    \node[dot, label={$q \notin J_4$}] at (5, 3) {}
+      [sibling distance = 5.5cm,
+        level distance = 5mm,
+        edge from parent/.style = {draw, thick, -latex},
+      ]
+      child { node[dot, label={$q \notin J_6$}] {}
+        [sibling distance = 2.5cm]
+        child { node[dot, label={$q \notin J_2$}] {}
+          [sibling distance = 1.5cm]
+          child {
+            node[dot] (N1) {}
+            [edge from parent/.append style = {densely dashed},]
+          }
+          child { node[dot] (N2) {}
+          }
+        }
+        child { node[dot, label={$q \notin J_3$}] {}
+          [sibling distance = 1.5cm]
+          child {
+            node[dot] (N3) {}
+            [edge from parent/.append style = {densely dashed},]
+          }
+          child { node[dot] (N4) {}
+          }
+        }
+      }
+      child { node[dot, label={$q \notin J_6$}] {}
+        [sibling distance = 2.5cm]
+        child { node[dot, label={$q \notin J_7$}] {}
+          [sibling distance = 1.5cm]
+          child {
+            node[dot] (N5) {}
+            [edge from parent/.append style = {densely dashed},]
+          }
+          child { node[dot] (N6) {}
+          }
+        }
+        child { node[dot, label={$q \notin J_1$}] {}
+          [sibling distance = 1.5cm]
+          child {
+            node[dot] (N7) {}
+            [edge from parent/.append style = {densely dashed},]
+          }
+          child { node[dot] (N8) {}
+          }
+        }
+      }
+    ;
+
+    \foreach \w/\k [count=\i] in {.5/2, 1.1/8, .8/3, .3/4, .9/7, .3/6, .6/1, 1/5} {
+      \node[fill=hsr-mauve, opacity=.8,
+        minimum height = 2mm, minimum width = {1cm*\w},
+        label={-90:$J_{\k}$},
+      ] (J\i) at ($(N\i)-(0,1)$) {};
+      \draw[thick, dotted] (N\i) -- (J\i);
+    };
+    \draw[very thick, ->] ($(J1)-(.5,0)$) -- ($(J8)+(1,0)$) node[above] {$\mathbb{R}$};
+  \end{tikzpicture}
+\end{frame}
+
+\subsection{Git bisect}
+
+\begin{frame}[fragile]{Git Bisect Theory}
   \begin{columns}
     \begin{column}{.5\linewidth}
       \begin{block}{Purpose}
-        You are looking for a commit that did something, e.g.
+        You are looking for a commit that caused something, e.g.
         \begin{itemize}
           \item Introduced a bug
           \item Deleted / added something
           \item Anything really
         \end{itemize}
       \end{block}
-      \begin{alertblock}{Basic Idea}
+      \begin{alertblock}{Rough Idea}
         \begin{enumerate}
           \item Take commit graph $G = (V,A)$ we want to find $\bar{v} \in V$
             that did above
-          \item Topologically sort $G$
+          \item Topologically sort $G$, i.e. add order $\succ^*$ to $V$
           \item Logarithmic search $\bar{v}$ in $G$
         \end{enumerate}
       \end{alertblock}
     \end{column}
     \begin{column}{.5\linewidth}
+      \begin{tikzpicture}
+        \matrix (m) [
+          row sep = 5mm, column sep = 4mm,
+          matrix of nodes, nodes = {
+            circle, draw, thick, fill=orange,
+            inner sep = 0pt, outer sep = 1mm, minimum size = 2.5mm,
+          }
+        ] {
+          |[label={60:A}]| {} &                     \\
+          |[label={60:B}]| {} &                      & |[label={60:C}]| {} \\
+                              & |[label={90:D}]| {}  & |[label={60:E}]| {} \\
+          |[label={90:F}]| {} &                      & |[label={60:G}]| {} \\
+          |[label={60:H}]| {} & |[label={120:I}]| {}  &                     \\
+                              & |[label={60:J}]| {} \\
+        };
+
+        \begin{scope}[thick, ->]
+          \draw (m-1-1) -- (m-2-1);
+          \draw (m-2-1) -- (m-3-2);
+          \draw (m-3-2) -- (m-4-1);
+          \draw (m-4-1) -- (m-5-1);
+          \draw (m-5-1) -- (m-6-2);
+
+          \draw (m-2-3) -- (m-3-2);
+
+          \draw (m-1-1) -- (m-2-3);
+          \draw (m-2-3) -- (m-3-3);
+          \draw (m-3-3) -- (m-4-3);
+          \draw (m-4-3) -- (m-5-2);
+          \draw (m-5-2) -- (m-6-2);
+
+          \draw (m-3-2) -- (m-5-2);
+        \end{scope}
+        
+        \matrix (s) [
+          right = 7mm of m,
+          row sep = 4mm,
+          matrix of nodes, nodes = {
+            circle, draw, thick, fill=orange,
+            inner sep = 0pt, outer sep = 1mm, minimum size = 2.5mm,
+          }
+        ] {
+          |(A) [label={0:A}]| {} \\ 
+          |(C) [label={0:C}]| {} \\ 
+          |(B) [label={0:B}]| {} \\ 
+          |(E) [label={0:E}]| {} \\ 
+          |(D) [label={0:D}]| {} \\ 
+          |(G) [label={0:G}]| {} \\ 
+          |(F) [label={0:F}]| {} \\ 
+          |(I) [label={0:I}]| {} \\ 
+          |(H) [label={0:H}]| {} \\ 
+          |(J) [label={0:J}]| {} \\
+        };
+        
+        \begin{scope}[thick, ->]
+          \draw (A) to[bend left] (B);
+          \draw (A) to (C);
+          \draw (B) to[bend left] (D);
+          \draw (C) to[bend right] (D);
+          \draw (C) to[bend right] (E);
+          \draw (D) to[bend left] (F);
+          \draw (D) to[bend right] (I);
+          \draw (E) to[bend right] (G);
+          \draw (F) to[bend left] (H);
+          \draw (G) to[bend right] (I);
+          \draw (H) to (J);
+          \draw (I) to[bend right] (J);
+        \end{scope}
+      \end{tikzpicture}
     \end{column}
   \end{columns}
 \end{frame}
 
 \begin{frame}{Git Bisect Practice}
+  \begin{columns}
+    \begin{column}{\linewidth}
+        You want to find the commit that did X. Initialization:
+        \begin{enumerate}
+          \item \texttt{git bisect start}
+          \item \texttt{git bisect bad} (current commit is bad, no X)
+          \item \texttt{git bisect good 258dbc1} (commit \texttt{258dbc1\ldots}
+            was good, has X)
+        \end{enumerate}
+        Git will checkout (go back in time to) a commit between the good one
+        and the bad one and you have to say
+        \begin{itemize}
+          \item \texttt{git bisect good}
+          \item \texttt{git bisect bad}
+          \item \texttt{git bisect skip} (cannot test this commit for X)
+        \end{itemize}
+        Process repeats a few time ($\approx$ log of \# of commits between good
+        and bad). If you have a script e.g. \texttt{check.py} that returns 0
+        for good, 125 for skip, any other number for bad, it can be automated
+        \begin{itemize}
+          \item \texttt{git bisect run check.py}
+        \end{itemize}
+    \end{column}
+  \end{columns}
 \end{frame}
 
+\subsection{Outlook}
+
 \begin{frame}{Outlook}
+
+  \centering
+  {
+    \Huge\bfseries
+    That's (most of) it
+  }
+  \vspace{1cm}
+
   \begin{block}{Learn More}
     Git and its ecosystem have many more features
     \begin{itemize}
-      \item Stash
-      \item Rebase
-      \item Blame
-      \item LFS (Large File System)
-      \item Email workflow (e.g. \texttt{https://sr.ht})
+      \item Stash, Rebase, Blame, \ldots
+      \item LFS (Large File Storage) for big (gigabytes) files 
+      \item Email ``old school'' workflow (e.g. \href{https://sr.ht}{\texttt{sr.ht}} and Linux Kernel)
       \item Integration with CI (e.g. GitHub Actions, GitLab Workers)
     \end{itemize}
   \end{block}
