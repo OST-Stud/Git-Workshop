@@ -1598,6 +1598,53 @@ Date:   Wed Feb 9 19:53:06 2022 +0100
 \subsection{Branches and Merging}
 
 \begin{frame}{Branches, Remotes and your HEAD}
+  \begin{columns}
+    \begin{column}{1.05\linewidth}
+      \begin{itemize}
+        \item Setup git the first time
+          \begin{itemize} \ttfamily \footnotesize
+            \item git config --global user.name "Your Name"
+            \item git config --global user.email your@email
+            \item git config --global core.editor your-editor 
+            \item git config --global alias.graph "log --all --decorate --graph --oneline"
+          \end{itemize}
+      \end{itemize}
+    \end{column}
+  \end{columns}
+
+  \begin{columns}[t]
+    \begin{column}{.5\linewidth}
+      \begin{itemize}
+        \item Your work tree state is at commit where you have your HEAD
+          \begin{itemize} \ttfamily 
+            \item git status
+            \item git log
+          \end{itemize}
+        \item Adding changes to the staging area and committing them
+          \begin{itemize} \ttfamily
+            \item git add [-u]
+            \item git commit [-a] [-v]
+          \end{itemize}
+      \end{itemize}
+    \end{column}
+    \begin{column}{.5\linewidth}
+      \begin{itemize}
+        \item Branching and the detached HEAD state
+          \begin{itemize} \ttfamily
+            \item git branch
+            \item git switch
+            \item git checkout
+            \item git merge
+          \end{itemize}
+        \item Managing remotes and Cloning
+          \begin{itemize} \ttfamily
+            \item git remote add / \ldots
+            \item git clone
+            \item git fetch / push / pull
+          \end{itemize}
+      \end{itemize}
+    \end{column}
+  \end{columns}
 \end{frame}
 
 \begin{frame}[fragile]{Automatic Merge Failed (Conflicts)}
@@ -1786,6 +1833,38 @@ Date:   Wed Feb 9 19:53:06 2022 +0100
 \end{frame}
 
 \begin{frame}{Trunk, Feature Branches}
+  This pertains software developement and project management.
+  \begin{columns}[t]
+    \begin{column}{.5\linewidth}
+      \begin{block}{Simplest Workflow}
+        \begin{itemize}
+          \item There is no team
+          \item Commit everything on the same branch
+          \item Extremely easy
+        \end{itemize}
+      \end{block}
+      \begin{block}{People Workflow}
+        \begin{itemize}
+          \item For very small teams
+          \item Very easy
+          \item Each person has a branch
+          \item Avoids mixing work
+        \end{itemize}
+      \end{block}
+    \end{column}
+    \begin{column}{.5\linewidth}
+      \begin{alertblock}{Branching Workflow}
+        Every time you want to add a feature, make changes in a short lived
+        branch until feature is complete, then merge that branch into a
+        ``master'' branch (also called ``main'' or ``trunk'')
+        \begin{itemize}
+          \item For larger teams or organized people
+          \item Changes are more organized
+          \item Typically, master branch always compiles
+        \end{itemize}
+      \end{alertblock}
+    \end{column}
+  \end{columns}
 \end{frame}
 
 \subsection{GitHub and Others, Fork}
@@ -1874,7 +1953,7 @@ Date:   Wed Feb 9 19:53:06 2022 +0100
             node[midway, text width = 11mm, right] {push \& pull \texttt{origin}} (brp-east);
 
           \draw[->, hsr-mauve, dashed] ($(brp-south)+(0,-.7)$) to[out=-90, in=0]
-            node[pos=.75, text width = 25mm, below] {pull / fetch \texttt{pr}} (alp-east);
+            node[pos=.75, text width = 25mm, below] {pull / fetch} (alp-east);
 
           \draw[->, hsr-blue!80!black] ($(arp-south)+(0,-.7)$) to[out=-90, in=180]
             node[pos=.75, text width = 20mm, below] {pull / fetch \texttt{upstream}} (blp-west);
