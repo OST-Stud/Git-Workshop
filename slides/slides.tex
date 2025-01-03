@@ -26,18 +26,25 @@
 \pgfsetlayers{bg,main}
 
 \tikzset{
-  db/.pic={
-    \draw[white, fill=white] (-.6,0) rectangle (.6,1.4);
-    \draw[white, fill=white] (0,1.4) ellipse [x radius=.6,y radius=.15];
-    \foreach \y in {0,.5,1}
-    {
-      \draw[thick, fill=white]
-        (-0.6,\y) to [looseness=0.5,bend right=90] ++(1.2,0)
-              to ++(0,0.4)
-              to [looseness=0.5,bend left=90] ++(-1.2,0)
-              to ++(0,-0.4);
-      \draw[thick] (-0.6,\y+0.4) edge[looseness=0.5,bend left=90] ++(1.2,0);
-    }
+  pics/db/.style args = {#1}{
+    code = {
+      \draw[white, fill=white] (-.6,-.7) rectangle (.6,.7);
+      \draw[white, fill=white] (0,.7) ellipse [x radius=.6,y radius=.15];
+      \foreach \y [count=\i] in {-.7,-.2,.3}
+      {
+        \draw[thick, fill=white]
+          (-0.6,\y) to [looseness=0.5,bend right=90] node[midway] (#1-b-\i) {} ++(1.2,0)
+                to node[midway] (#1-e-\i) {} ++(0,0.4)
+                to [looseness=0.5,bend left=90] ++(-1.2,0)
+                to node[midway] (#1-w-\i) {}++(0,-0.4);
+        \draw[thick] (-0.6,\y+0.4) edge[looseness=0.5,bend left=90] node[midway] (#1-t-\i) {} ++(1.2,0);
+      }
+      \node (#1-north) at (#1-t-3) {};
+      \node (#1-south) at (#1-b-1) {};
+      \node (#1-west) at (#1-w-2) {};
+      \node (#1-east) at (#1-e-2) {};
+      \node (#1) at ($(#1-north)!0.5!(#1-south)$) {};
+    },
   },
   pics/file/.style args = {#1 #2 #3}{
     code = {
@@ -1118,8 +1125,130 @@
 
 \begin{frame}[fragile]{Solving the Problem: Multiple Computers IV}
   \begin{columns}
-    \begin{column}{.6\linewidth}
-      pull = fetch + merge
+    \begin{column}{1.1\linewidth}
+      Since it is very a common operation there is a shorthand to fetch and
+      merge the remote branch with the same name as the current one.
+
+      \begin{center}
+        \noindent
+        \begin{tikzpicture}
+          \matrix (b) [
+            row sep = 6mm, column sep = 6mm, 
+            outer sep = 1mm, inner sep = 6mm,
+            minimum width = 45mm,
+            matrix of nodes, nodes = {
+              draw, thick, circle, fill = teal,
+              inner sep = 0pt, outer sep = .5mm, minimum size = 2mm,
+            },
+            draw = hsr-blue, thick, fill=hsr-blue20,
+          ] {
+            {} & {} & |[fill=hsr-blue]| {} & |[fill=hsr-blue]| {} \\
+          };
+
+          \node[
+            above, anchor = south, rotate = 90,
+            font = \bfseries, text = hsr-blue,
+          ] at (b.west) {Bob's PC};
+
+          \node[
+            anchor = south west,
+            font = \ttfamily, text = hsr-blue,
+          ] at (b.north west) {bob};
+
+          \node[above, font = \footnotesize\ttfamily] at (b-1-4.north) {master};
+
+          \begin{scope}[thick, <-]
+            \draw (b-1-1) -- (b-1-2);
+            \draw (b-1-2) -- (b-1-3);
+            \draw (b-1-3) -- (b-1-4);
+          \end{scope}
+
+          \matrix (a) [
+            below = 16mm of b,
+            row sep = 6mm, column sep = 6mm,
+            outer sep = 1mm, inner sep = 6mm,
+            minimum width = 45mm,
+            matrix of nodes, nodes = {
+              draw, thick, circle, fill = teal,
+              inner sep = 0pt, outer sep = .5mm, minimum size = 2mm,
+            },
+            draw = hsr-mauve, thick, fill=hsr-mauve20,
+          ] {
+               &    & |[fill=hsr-blue]| {}  & |[fill=hsr-blue]| {}  \\
+            {} & {} & |[fill=hsr-mauve]| {} & |[fill=hsr-mauve]| {} \\
+          };
+
+          \node[
+            above, anchor = south, rotate = 90,
+            font = \bfseries, text = hsr-mauve,
+          ] at (a.west) {Alice's PC};
+
+          \node[
+            anchor = south west,
+            font = \ttfamily, text = hsr-mauve,
+          ] at (a.north west) {alice};
+
+          \node[below, font = \footnotesize\ttfamily] at (a-2-4.south) {master};
+          \node[above, font = \footnotesize\ttfamily, text = hsr-blue] 
+            at (a-1-4.north) {bob/master};
+
+          \begin{scope}[thick, <-]
+            \draw (a-2-1) -- (a-2-2);
+            \draw (a-2-2) -- (a-2-3);
+            \draw (a-2-3) -- (a-2-4);
+
+            \draw (a-2-2) -- (a-1-3);
+            \draw (a-1-3) -- (a-1-4);
+          \end{scope}
+
+          \draw[very thick, ->, hsr-mauve] (b.south)
+            -- node[midway, right, fill=white] {fetch} (a.north);
+
+          \begin{scope}[very thick, dashed, opacity=.5, gray, ->]
+          \end{scope}
+
+          \matrix (am) [
+            right = 16mm of a,
+            row sep = 6mm, column sep = 6mm,
+            outer sep = 1mm, inner sep = 6mm,
+            minimum width = 45mm,
+            matrix of nodes, nodes = {
+              draw, thick, circle, fill = teal,
+              inner sep = 0pt, outer sep = .5mm, minimum size = 2mm,
+            },
+            draw = hsr-mauve, thick, fill=hsr-mauve20,
+          ] {
+               &    & |[fill=hsr-blue]| {}  & |[fill=hsr-blue]| {}  \\
+            {} & {} & |[fill=hsr-mauve]| {} & |[fill=hsr-mauve]| {} & |[fill=hsr-basswood]| {} \\
+          };
+
+          \node[
+            anchor = south west,
+            font = \ttfamily, text = hsr-mauve,
+          ] at (am.north west) {alice};
+
+          \node[below, font = \footnotesize\ttfamily] at (am-2-5.south) {master};
+          \node[above, font = \footnotesize\ttfamily, text = hsr-blue] 
+            at (am-1-4.north) {bob/master};
+
+          \draw[very thick, ->, hsr-mauve] (a.east)
+            -- node[midway, above, fill=white] {merge} (am.west);
+
+          \draw[very thick, ->, hsr-mauve] (b.east)
+            to[out=0, in=90] node[midway, above, fill=white, sloped] {pull} (am.north);
+
+          \begin{scope}[thick, <-]
+            \draw (am-2-1) -- (am-2-2);
+            \draw (am-2-2) -- (am-2-3);
+            \draw (am-2-3) -- (am-2-4);
+            \draw (am-2-4) -- (am-2-5);
+
+            \draw (am-2-2) -- (am-1-3);
+            \draw (am-1-3) -- (am-1-4);
+            \draw (am-1-4) -- (am-2-5);
+          \end{scope}
+        \end{tikzpicture}
+      \end{center}
     \end{column}
   \end{columns}
 \end{frame}
@@ -1313,11 +1442,10 @@ Date:   Wed Feb 9 19:53:06 2022 +0100
         \end{scope}
 
         \visible<2->{
-          \draw[black] pic{db} node (DB) {};
-          \node[below=.3cm, align=center, text width = 2cm] (DB.south) {Repository (index)};
+          \draw[black] pic{db = {DB}};
+          \node[below, align=center, text width=2cm] at (DB-south) {Repository (index)};
 
-          \draw[very thick, ->]
-            ($(G.east)+(.2,0)$) to[out=0, in=90] ($(DB.north)+(0,1.6)$);
+          \draw[very thick, ->] ($(G.east)+(.2,0)$) to[out=0, in=90] (DB-north);
 
           \node[right = 2cm of P, font=\bfseries] (W) {Work Tree};
           \draw[very thick, <-] ($(P.east)+(.2,0)$) -- (W);
@@ -1595,7 +1723,7 @@ Date:   Wed Feb 9 19:53:06 2022 +0100
   \begin{block}{Command Line Interface}
     If you learn to use Git on the terminal you are set forever, but
     \begin{itemize}
-      \item you have to think (tip: use \texttt{git status}!)
+      \item you have to think (tip: abuse \texttt{git status} and read, always!)
     \end{itemize}
   \end{block}
   \begin{alertblock}{Graphical Interfaces}
@@ -1605,7 +1733,7 @@ Date:   Wed Feb 9 19:53:06 2022 +0100
     \end{itemize}
     Alternatives
     \begin{itemize}
-      \item SourceTree, GitKraken
+      \item SourceTree, GitKraken, lazygit (terminal UI)
       \item TortoiseGit (integrates with Windows Explorer)
     \end{itemize}
     Bad GUI (why? It tries to hide complexity until you inevitabily screw up
@@ -1620,109 +1748,169 @@ Date:   Wed Feb 9 19:53:06 2022 +0100
 \subsection{Best Practices}
 
 \begin{frame}{What is a Commit Anyways?}
+
+  When you work with git, a commit should be a
+  \begin{center}
+    \Large \bfseries
+    Logical Unit of Work
+  \end{center}
+  i.e. you think of a specific thing you need to do, you do it, then
+  immediately commit the changes, repeat. The more people in the team, the more
+  commits you should do.
+
+  \begin{columns}[t]
+    \begin{column}{.5\linewidth}
+      \begin{alertblock}{Bad} \footnotesize
+        \begin{itemize}
+          \item Huge commits that change multiple unrelated files / classes / functions / \ldots
+          \item Meaningless messages like ``fix'', ``update'', ``wip'' or ``misc''
+          \item Messages in past tense
+        \end{itemize}
+      \end{alertblock}
+
+      \footnotesize
+      Demo: Browse Linux kernel git commits
+    \end{column}
+    \begin{column}{.5\linewidth}
+      \begin{block}{Good} \footnotesize
+        \begin{itemize}
+          \item Small, modular changes, change only one file / class / function / \ldots
+          \item Descriptive commit message, just title with bullet points are ok!
+          \item Commit even if does not compile
+          \item Message in imperative tense. Write as if you were the recipient
+            of the commit: what will it do?
+        \end{itemize}
+      \end{block}
+    \end{column}
+  \end{columns}
 \end{frame}
 
 \begin{frame}{Trunk, Feature Branches}
 \end{frame}
 
-\begin{frame}{Releases and Tags}
-\end{frame}
-
 \subsection{GitHub and Others, Fork}
 
-\begin{frame}{Git Services (GitHub, GitLab, \ldots)}
-\end{frame}
+\begin{frame}[fragile]{Git Services (GitHub, GitLab, \ldots)}
+  \begin{columns}
+    \begin{column}{.6\linewidth}
+      \centering
+      \begin{tikzpicture}
+        \draw                  pic{db = {alp}} coordinate (al) node[below=9mm, font=\bfseries] {proj};
+        \draw (al) ++ (2, 36mm)   pic{db = {arp}} coordinate (ar) node[below=9mm, font=\bfseries] {alice/proj};
+        \draw (ar) ++ (2,-36mm)   pic{db = {blp}} coordinate (bl) node[below=9mm, font=\bfseries] {proj};
 
-\begin{frame}{Forking Projects}
+        \begin{pgfonlayer}{bg}
+          \draw (al) node[minimum width = 25mm, minimum height = 3cm,
+            thick, draw=hsr-mauve, fill = hsr-mauve20] (pc-a) {};
+
+          \draw (bl) node[minimum width = 25mm, minimum height = 3cm,
+            thick, draw=hsr-blue, fill = hsr-blue20] (pc-b) {};
+
+          \draw (ar) node[minimum width = 3cm, minimum height = 3cm,
+            thick, draw=hsr-lakegreen, fill=hsr-lakegreen20, yshift = -2mm] (gh) {};
+
+          \node[below, font=\bfseries, text=hsr-mauve] at (pc-a.south) {Alice's PC};
+          \node[below, font=\bfseries, text=hsr-blue]  at (pc-b.south) {Bob's PC};
+          \node[above, font=\bfseries, text=hsr-lakegreen]  at (gh.north) {Git Server};
+        \end{pgfonlayer}
+
+        \begin{scope}[ultra thick]
+          \draw[<->] (alp-north) to[out=90, in=180]
+            node[midway, text width = 11mm, left]  {push \& pull} (arp-west);
+
+          \draw[<->] (blp-north) to[out=90, in=0]
+            node[midway, text width = 11mm, right] {push \& pull} (arp-east);
+        \end{scope}
+      \end{tikzpicture}
+    \end{column}
+    \begin{column}{.4\linewidth}
+      \begin{block}{Git Server} \footnotesize
+        Because of IPv4 NAT, Bob can't push directly to Alice's computer. So
+        they use a third computer that hosts a \emph{git server} that can be
+        reached by both.
+      \end{block}
+      \begin{alertblock}{Interface} \footnotesize
+        The server (usually) has a web interface with a login to manage your
+        hosted repositories. In this example Alice has a project \textbf{proj}
+        under the username \textbf{alice}.
+      \end{alertblock}
+      \begin{exampleblock}{Examples} \footnotesize
+        GitHub, GitLab, Gitea, Codeberg, SourceHut, rgit.
+      \end{exampleblock}
+    \end{column}
+  \end{columns}
 \end{frame}
 
 \begin{frame}[fragile]{Forking and Pull / Merge Requests}
-  \resizebox{!}{.8\textheight}{
-    \begin{tikzpicture}
-      \visible<1->{
-        % rick's repos
-        \draw (0, 0)          pic{db} node (DBA1){} node[below=.2cm] {\texttt{proj}};
-        \draw (DBA1) ++(6, 0) pic{db} node (DBA2){} node[below=.2cm] {\texttt{rick/proj}};
-      }
+  \begin{columns}
+    \begin{column}{1.1\linewidth}
+      \begin{tikzpicture}
+        \draw                   pic{db = {alp}} coordinate (al) node[below=9mm, font=\bfseries] {proj};
+        \draw (al) ++ (2,36mm)  pic{db = {arp}} coordinate (ar) node[below=9mm, font=\bfseries] {alice/proj};
 
-      % morty's repos
-      \visible<5->{
-        \draw (DBA1) ++(0,-5) pic{db} node (DBB1){} node[below=.2cm] {\texttt{proj}};
-      }
-      \visible<4->{
-        \draw (DBB1) ++(6, 0) pic{db} node (DBB2){} node[below=.2cm] {\texttt{morty/proj}};
-      }
+        \draw (ar) ++ (50mm,0)  pic{db = {brp}} coordinate (br) node[below=9mm, font=\bfseries] {bob/proj};
+        \draw (br) ++ (2,-36mm) pic{db = {blp}} coordinate (bl) node[below=9mm, font=\bfseries] {proj};
 
+        \begin{pgfonlayer}{bg}
+          \draw (al) node[minimum width = 25mm, minimum height = 3cm,
+            thick, draw=hsr-mauve, fill = hsr-mauve20] (pc-a) {};
 
-      \begin{pgfonlayer}{bg}
-        \visible<1->{
+          \draw (bl) node[minimum width = 25mm, minimum height = 3cm,
+            thick, draw=hsr-blue, fill = hsr-blue20] (pc-b) {};
 
-          % laptop background
-          \draw[blue!80, fill=blue!10!white]
-          (DBA1.north west) ++(-1.2, 3) node[black, anchor=north west, below right=.2cm]{Laptop}
-          rectangle ($(DBB1.south east) + (1.2, -1.5)$);
+          \draw ($(ar)!0.5!(br)$) node[minimum width = 8cm, minimum height = 3cm,
+            thick, draw=hsr-lakegreen, fill=hsr-lakegreen20, yshift = -2mm] (gh) {};
 
-          % server background
-          \draw[red!80, fill=red!10!white]
-          (DBA2.north west) ++(-1.2, 3) node[black, anchor=north west, below right=.2cm]{Server}
-          rectangle ($(DBB2.south east) + (1.2, -1.5)$);
+          \node[below, font=\bfseries, text=hsr-mauve] at (pc-a.south) {Alice's PC};
+          \node[below, font=\bfseries, text=hsr-blue]  at (pc-b.south) {Bob's PC};
+          \node[above, font=\bfseries, text=hsr-lakegreen]  at (gh.north) {GitHub Server};
+        \end{pgfonlayer}
 
-        }
+        \begin{scope}[ultra thick]
+          \draw[<->, hsr-mauve] (alp-north) to[out=90, in=180]
+            node[midway, text width = 11mm, left]  {push \& pull} (arp-west);
 
-        % rick's background
-        \visible<2->{
-          \draw[magenta!80, fill=magenta!20, fill opacity=.8]
-          (DBA1.north west) ++(-2.5, 2)
-          node[black, anchor=north east, rotate=90, below left=.3cm] {Rick}
-          rectangle ($(DBA2.south east) + (2, -.8)$);
-        }
+          \draw[<->, hsr-blue!80!black] (blp-north) to[out=90, in=0]
+            node[midway, text width = 11mm, right] {push \& pull \texttt{origin}} (brp-east);
 
-        % morty's background
-        \visible<3->{
-          \draw[cyan!80, fill=cyan!20, fill opacity=.8]
-          (DBB1.north west) ++(-2.5, 2)
-          node[black, anchor=north east, rotate=90, below left=.3cm] {Morty}
-          rectangle ($(DBB2.south east) + (2, -.8)$);
-        }
-      \end{pgfonlayer}
+          \draw[->, hsr-mauve, dashed] ($(brp-south)+(0,-.7)$) to[out=-90, in=0]
+            node[pos=.75, text width = 25mm, below] {pull / fetch \texttt{pr}} (alp-east);
 
-      \visible<1->{
-        % rick's arrow
-        \draw[darkgray, ultra thick, <->]
-        ($(DBA1.north east)+(.75,.5)$) to node[pos=.5, above]
-        {\footnotesize\texttt{push / pull}} ($(DBA2.north west)+(-.75,.5)$);
-      }
+          \draw[->, hsr-blue!80!black] ($(arp-south)+(0,-.7)$) to[out=-90, in=180]
+            node[pos=.75, text width = 20mm, below] {pull / fetch \texttt{upstream}} (blp-west);
 
-      \visible<5->{
-        % morty's arrow
-        \draw[darkgray, ultra thick, <->]
-        ($(DBB1.north east)+(.75,.5)$) to node[pos=.5, above]
-        {\footnotesize\texttt{push / pull}} ($(DBB2.north west)+(-.75,.5)$);
-      }
+          \draw[->] ($(arp-east) + (.1,.1)$) -- node[midway, above] {Fork} ($(brp-west) + (-.1,.1)$);
+          \draw[<-, hsr-blue!80!black] ($(arp-east) + (.1,-.1)$) --
+            node[midway, below, font=\footnotesize] {Pull / Merge Request} ($(brp-west) + (-.1,-.1)$);
+        \end{scope}
+      \end{tikzpicture}
+    \end{column}
+  \end{columns}
 
-      \visible<4->{
-        % forking arrow
-        \draw[black, ultra thick, ->]
-        ($(DBA2.south west)+(0,-.75)$) to node[
-          pos=.5, left=.2cm, thick, draw=red, fill=white
-        ]{\textbf{\texttt{fork}}} ($(DBB2.north west)+(0,1.75)$);
-      }
+  \begin{center}
+    \tiny Note: Actually the fork does not need to be on the same server, but let's keep this simple.
+  \end{center}
+\end{frame}
 
-      % PR arrow
-      \visible<6->{
-        \draw[black, ultra thick, <-]
-        ($(DBA2.south east)+(0,-.75)$) to node[
-          pos=.5, right=.2cm, thick, draw=red, fill=white
-        ]{\textbf{\texttt{pull request}}} ($(DBB2.north east)+(0,1.75)$);
-      }
+\begin{frame}{Forking and Pull / Merge Requests}
+  Most services provide a way to fetch the pull requests as if they were
+  remote branches on your repository. Assuming the remote is named\footnote{
+    If you remote has a different name, replace all occurences of
+    \texttt{origin}.
+  } \texttt{origin} for GitHub this can be achieved by running
+  \begin{enumerate} \ttfamily \footnotesize
+    \item git config --add remote.origin.fetch '+refs/pull/*/head:refs/remotes/origin/pr/*'
+    \item git fetch origin
+    \item git switch pr/5
+  \end{enumerate}
 
-      % \visible<6->{
-      % \draw[darkgray, ultra thick, ->]
-      % ($(DBA2.south west)+(-1,-.5)$) to[bend right] node[pos=.6, below right, rotate=30]
-      %{\texttt{pull}}($(DBB1.north east)+(.75,1.5)$);
-      % }
-    \end{tikzpicture}
-  }
+  Then, you can check out any pull request using their ID, here for example
+  \#5. The same for GitLab:
+  \begin{enumerate} \ttfamily \footnotesize
+    \item git config --add remote.origin.fetch '+refs/merge-requests/*/head:refs/remotes/origin/mr/*'
+    \item git fetch origin
+    \item git switch mr/5
+  \end{enumerate}
 \end{frame}
 
 \section{Extras (to flex)}
@@ -1883,7 +2071,7 @@ Date:   Wed Feb 9 19:53:06 2022 +0100
 
 \subsection{Git bisect}
 
-\begin{frame}[fragile]{Git Bisect Theory}
+\begin{frame}[fragile]{Git Bisect: Search for something in the past}
   \begin{columns}
     \begin{column}{.5\linewidth}
       \begin{block}{Purpose}
@@ -2019,6 +2207,7 @@ Date:   Wed Feb 9 19:53:06 2022 +0100
     Git and its ecosystem have many more features
     \begin{itemize}
       \item Stash, Rebase, Blame, \ldots
+      \item Submodules and subtrees
       \item LFS (Large File Storage) for big (gigabytes) files 
       \item Email ``old school'' workflow (e.g. \href{https://sr.ht}{\texttt{sr.ht}} and Linux Kernel)
       \item Integration with CI (e.g. GitHub Actions, GitLab Workers)
