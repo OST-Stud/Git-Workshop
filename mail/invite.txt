@@ -1,0 +1,35 @@
+ __      __                 __               __
+/\ \  __/\ \               /\ \             /\ \
+\ \ \/\ \ \ \    ___   _ __\ \ \/'\     ____\ \ \___     ___   _____
+ \ \ \ \ \ \ \  / __`\/\`'__\ \ , <    /',__\\ \  _ `\  / __`\/\ '__`\
+  \ \ \_/ \_\ \/\ \L\ \ \ \/ \ \ \\`\ /\__, `\\ \ \ \ \/\ \L\ \ \ \L\ \
+   \ `\___x___/\ \____/\ \_\  \ \_\ \_\/\____/ \ \_\ \_\ \____/\ \ ,__/
+    '\/__//__/  \/___/  \/_/   \/_/\/_/\/___/   \/_/\/_/\/___/  \ \ \/
+                                                                 \ \_\
+                                                                  \/_/
+
+Greetings, student!
+
+Software and programming seem to be infiltrating everywhere, from quantitative
+psychology to computational mechanics, nowadays in every field with data or
+computations you will needs to learn to code! 
+
+So, do you use MATLAB, Python, R / Jupyter Notebooks or any other programming
+language? Have you ever heard of Git? It is the industry standard tool to
+manage source code, do you know how to use it? No? We got you covered:
+
+    When?    11. March 2025, 17:15
+    Where?   Campus Rapperswil Room 1.169
+    What?    Presentation + Hands-on Kickstart. Bring your laptop!
+
+Git is not exactly easy to use, and that's why we provide a workshop. The first
+half will be a presentation to learn the theory, and in the second half you
+will learn hands-on with your laptop and a beers!
+
+Register now at the following link:
+
+https://forms.gle/D4UBP4fgWTKS1Rrv6
+
+And take a look at the git repository
+
+https://github.com/hsr-stud/Git-Workshop
