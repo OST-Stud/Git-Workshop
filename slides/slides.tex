@@ -1,5 +1,5 @@
 % vim: ts=2 sw=2 et:
-\documentclass[xetex, handout]{beamer}
+\documentclass[xetex]{beamer}
 \usetheme{hsr}
 
 \usepackage[T1]{fontenc}
@@ -19,6 +19,7 @@
 \usetikzlibrary{decorations.pathreplacing}
 \usetikzlibrary{fadings}
 \usetikzlibrary{matrix}
+\usetikzlibrary{overlay-beamer-styles}
 \usetikzlibrary{positioning}
 \usetikzlibrary{trees}
 
@@ -28,6 +29,7 @@
 \tikzset{
   pics/db/.style args = {#1}{
     code = {
+      % FIXME: rewrite using cylinder shapes from shapes library
       \draw[white, fill=white] (-.6,-.7) rectangle (.6,.7);
       \draw[white, fill=white] (0,.7) ellipse [x radius=.6,y radius=.15];
       \foreach \y [count=\i] in {-.7,-.2,.3}
@@ -39,10 +41,10 @@
                 to node[midway] (#1-w-\i) {}++(0,-0.4);
         \draw[thick] (-0.6,\y+0.4) edge[looseness=0.5,bend left=90] node[midway] (#1-t-\i) {} ++(1.2,0);
       }
-      \node (#1-north) at (#1-t-3) {};
-      \node (#1-south) at (#1-b-1) {};
-      \node (#1-west) at (#1-w-2) {};
-      \node (#1-east) at (#1-e-2) {};
+      \node (#1-north) at (#1-t-3) {};  % [circle,fill=red,minimum size=1mm,inner sep=0pt]
+      \node (#1-south) at (#1-b-1) {};  % [circle,fill=red,minimum size=1mm,inner sep=0pt]
+      \node (#1-west) at (#1-w-2) {};   % [circle,fill=red,minimum size=1mm,inner sep=0pt]
+      \node (#1-east) at (#1-e-2) {};   % [circle,fill=red,minimum size=1mm,inner sep=0pt]
       \node (#1) at ($(#1-north)!0.5!(#1-south)$) {};
     },
   },
@@ -204,61 +206,73 @@
       column sep = 18mm, row sep = 1cm,
       row 2/.style = {row sep = 5mm},
     ] {
-        \pic{file = {fb0 f {}}}; 
-      & \pic{file = {fb1 f {}}}; 
-      & \pic{file = {fb2 f {}}}; 
-      & \pic{file = {fb3 f {}}}; 
+        \pic[visible on=<1->]{file = {fb0 f {}}}; 
+      & \pic[visible on=<2->]{file = {fb1 f {}}}; 
+      & \pic[visible on=<3->]{file = {fb2 f {}}}; 
+      & \pic[visible on=<6->]{file = {fb3 f {}}}; 
       \\
-        \node[commit, label={60:A}] (cb0) {};
-      & \node[commit, label={60:B}] (cb1) {};
-      & \node[commit, label={60:C}] (cb2) {};
-      & \node[commit, label={60:M}, fill=magenta] (cb3) {};
-        \fill[opacity=.2, magenta] (cb3) circle (5mm);
+        \node[visible on=<1->, commit, label={[visible on=<1->]60:A}] (cb0) {};
+      & \node[visible on=<2->, commit, label={[visible on=<2->]60:B}] (cb1) {};
+      & \node[visible on=<3->, commit, label={[visible on=<3->]60:C}] (cb2) {};
+      & \node[visible on=<6->, commit, label={[visible on=<6->]60:M}, fill=magenta] (cb3) {};
+        \only<6->{
+          \fill[opacity=.2, magenta] (cb3) circle (5mm);
+        }
       \\
-      & \node[commit, label={60:B'}] (ca1) {};
-      & \node[commit, label={60:C'}] (ca2) {};
+      & \node[visible on=<4->, commit, label={[visible on=<4->]60:B'}] (ca1) {};
+      & \node[visible on=<5->, commit, label={[visible on=<5->]60:C'}] (ca2) {};
       \\
-        \pic{file = {fa0 f {}}}; 
-      & \pic{file = {fa1 f {}}}; 
-      & \pic{file = {fa2 f {}}}; 
-      & \pic{file = {fa3 f {}}}; 
+        \pic[visible on=<3->]{file = {fa0 f {}}}; 
+      & \pic[visible on=<4->]{file = {fa1 f {}}}; 
+      & \pic[visible on=<5->]{file = {fa2 f {}}}; 
+      & \pic[visible on=<6->]{file = {fa3 f {}}}; 
       \\
     };
 
     \node[rotate=90, font={\bfseries}, hsr-blue]  at ($(-.5,0) + (fb0.west)$) {Bob};
-    \node[rotate=90, font={\bfseries}, hsr-mauve] at ($(-.5,0) + (fa0.west)$) {Alice};
+    \node[visible on=<3->, rotate=90, font={\bfseries}, hsr-mauve] at ($(-.5,0) + (fa0.west)$) {Alice};
 
     \begin{scope}[thick]
-      \draw[->] (fb0) -- node[midway, above] {edit} (fb1);
-      \draw[<-] (cb0) -- node[midway, above] {from} (cb1);
-      \draw[->] (fb1) -- node[midway, above] {edit} (fb2);
-      \draw[<-] (cb1) -- node[midway, above] {from} (cb2);
+      \only<2->{
+        \draw[->] (fb0) -- node[midway, above] {edit} (fb1);
+        \draw[<-] (cb0) -- node[midway, above] {from} (cb1);
+      }
+      \only<3->{
+        \draw[->] (fb1) -- node[midway, above] {edit} (fb2);
+        \draw[<-] (cb1) -- node[midway, above] {from} (cb2);
+      }
 
-      \draw[->] (fa0) -- node[midway, above] {edit} (fa1);
-      \draw[<-] (cb0) to[out=-60, in=180] 
-                      node[midway, above, sloped] {from} (ca1);
+      \only<4->{
+        \draw[->] (fa0) -- node[midway, above] {edit} (fa1);
+        \draw[<-] (cb0) to[out=-60, in=180] 
+                        node[midway, above, sloped] {from} (ca1);
+      }
 
-      \draw[->] (fa1) -- node[midway, above] {edit} (fa2);
-      \draw[<-] (ca1) -- node[midway, above] {from} (ca2);
+      \only<5->{
+        \draw[->] (fa1) -- node[midway, above] {edit} (fa2);
+        \draw[<-] (ca1) -- node[midway, above] {from} (ca2);
+      }
 
-      \draw[->] (fb2) -- node[midway, above] {``sync''} (fb3);
-      \draw[<-] (cb2) -- node[midway, above] {from} (cb3);
+      \only<6->{
+        \draw[->] (fb2) -- node[midway, above] {``sync''} (fb3);
+        \draw[<-] (cb2) -- node[midway, above] {from} (cb3);
 
-      \draw[->] (fa2) -- node[midway, above] {``sync''} (fa3);
-      \draw[<-] (ca2) to[out=0, in=-120]
-                      node[midway, above, sloped] {from} (cb3);
+        \draw[->] (fa2) -- node[midway, above] {``sync''} (fa3);
+        \draw[<-] (ca2) to[out=0, in=-120]
+                        node[midway, above, sloped] {from} (cb3);
+      }
 
       \begin{scope}[gray]
-        \draw[->] (fb0) -- node[midway, left] {save} (cb0);
-        \draw[->] (fb1) -- node[midway, left] {save} (cb1);
-        \draw[->] (fb2) -- node[midway, left] {save} (cb2);
+        \draw[visible on=<1->, ->] (fb0) -- node[midway, left] {save} (cb0);
+        \draw[visible on=<2->, ->] (fb1) -- node[midway, left] {save} (cb1);
+        \draw[visible on=<3->, ->] (fb2) -- node[midway, left] {save} (cb2);
 
-        \draw[->] (cb0) -- node[midway, left] {copy} (fa0);
-        \draw[->] (fa1) -- node[midway, left] {save} (ca1);
-        \draw[->] (fa2) -- node[midway, left] {save} (ca2);
+        \draw[visible on=<3->, ->] (cb0) -- node[midway, left] {copy} (fa0);
+        \draw[visible on=<4->, ->] (fa1) -- node[midway, left] {save} (ca1);
+        \draw[visible on=<5->, ->] (fa2) -- node[midway, left] {save} (ca2);
 
-        \draw[->] (cb3) -- node[midway, left] {copy} (fb3);
-        \draw[->] (cb3) -- node[midway, left] {copy} (fa3);
+        \draw[visible on=<6->, ->] (cb3) -- node[midway, left] {copy} (fb3);
+        \draw[visible on=<6->, ->] (cb3) -- node[midway, left] {copy} (fa3);
       \end{scope}
     \end{scope}
   \end{tikzpicture}
@@ -351,11 +365,11 @@
         finite set of \emph{arcs} $A$ and may not contain loops.
       \end{block}
 
-      \begin{block}{Partial Order}
+      \begin{block}<2->{Partial Order}
         DAG have a partial order relation $u \succ v$ for comparable $u,v \in V$.
       \end{block}
 
-      \begin{alertblock}{Topological Order}
+      \begin{alertblock}<3->{Topological Order}
         A DAG $G = (V,A)$ has a total order $\succ^*$ by having that for all
         $(u, v) \in A$ $u \succ^* v$. If $G$ has a Hamiltonian path
         $\succ^*$
@@ -397,41 +411,42 @@
           \draw (m-3-2) -- (m-5-2);
         \end{scope}
         
-        \matrix (s) [
-          right = 7mm of m,
-          row sep = 4mm,
-          matrix of nodes, nodes = {
-            circle, draw, thick, fill=orange,
-            inner sep = 0pt, outer sep = 1mm, minimum size = 2.5mm,
-          }
-        ] {
-          |(A) [label={0:A}]| {} \\ 
-          |(C) [label={0:C}]| {} \\ 
-          |(B) [label={0:B}]| {} \\ 
-          |(E) [label={0:E}]| {} \\ 
-          |(D) [label={0:D}]| {} \\ 
-          |(G) [label={0:G}]| {} \\ 
-          |(F) [label={0:F}]| {} \\ 
-          |(I) [label={0:I}]| {} \\ 
-          |(H) [label={0:H}]| {} \\ 
-          |(J) [label={0:J}]| {} \\
-        };
-        
-        \begin{scope}[thick, ->]
-          \draw (A) to[bend left] (B);
-          \draw (A) to (C);
-          \draw (B) to[bend left] (D);
-          \draw (C) to[bend right] (D);
-          \draw (C) to[bend right] (E);
-          \draw (D) to[bend left] (F);
-          \draw (D) to[bend right] (I);
-          \draw (E) to[bend right] (G);
-          \draw (F) to[bend left] (H);
-          \draw (G) to[bend right] (I);
-          \draw (H) to (J);
-          \draw (I) to[bend right] (J);
-        \end{scope}
-
+        \only<3->{
+          \matrix (s) [
+            right = 7mm of m,
+            row sep = 4mm,
+            matrix of nodes, nodes = {
+              circle, draw, thick, fill=orange,
+              inner sep = 0pt, outer sep = 1mm, minimum size = 2.5mm,
+            }
+          ] {
+            |(A) [label={0:A}]| {} \\ 
+            |(C) [label={0:C}]| {} \\ 
+            |(B) [label={0:B}]| {} \\ 
+            |(E) [label={0:E}]| {} \\ 
+            |(D) [label={0:D}]| {} \\ 
+            |(G) [label={0:G}]| {} \\ 
+            |(F) [label={0:F}]| {} \\ 
+            |(I) [label={0:I}]| {} \\ 
+            |(H) [label={0:H}]| {} \\ 
+            |(J) [label={0:J}]| {} \\
+          };
+          
+          \begin{scope}[thick, ->]
+            \draw (A) to[bend left] (B);
+            \draw (A) to (C);
+            \draw (B) to[bend left] (D);
+            \draw (C) to[bend right] (D);
+            \draw (C) to[bend right] (E);
+            \draw (D) to[bend left] (F);
+            \draw (D) to[bend right] (I);
+            \draw (E) to[bend right] (G);
+            \draw (F) to[bend left] (H);
+            \draw (G) to[bend right] (I);
+            \draw (H) to (J);
+            \draw (I) to[bend right] (J);
+          \end{scope}
+        }
       \end{tikzpicture}
     \end{column}
   \end{columns}
@@ -573,7 +588,7 @@
           \node[above = 1mm] at (m-1-5) {BY};
         \end{scope}
 
-        \matrix (n) [
+        \matrix (n) [visible on=<2->,
           below = 2cm of m,
           column sep = 8mm, row sep = 6mm,
           fill = lightgray!20, inner sep = 5mm, outer sep = 2mm,
@@ -585,19 +600,22 @@
           |[fill=orange]| {} & |[fill=orange]| {} & {} & {} & {} \\
         };
 
-        \begin{scope}[thick, <-]
-          \draw (n-1-1) -- (n-1-2);
-          \draw (n-1-2) -- (n-1-3);
-          \draw (n-1-3) -- (n-1-4);
-          \draw (n-1-4) -- (n-1-5);
-        \end{scope}
+        \only<2->{
+          \begin{scope}[thick, <-]
+            \draw (n-1-1) -- (n-1-2);
+            \draw (n-1-2) -- (n-1-3);
+            \draw (n-1-3) -- (n-1-4);
+            \draw (n-1-4) -- (n-1-5);
+          \end{scope}
 
-        \begin{scope}[font=\ttfamily]
-          \node[below = 1mm] at (n-1-5) {BX};
-          \node[above = 1mm] at (n-1-5) {BY};
-        \end{scope}
+          \begin{scope}[font=\ttfamily]
+            \node[below = 1mm] at (n-1-5) {BX};
+            \node[above = 1mm] at (n-1-5) {BY};
+          \end{scope}
 
-        \draw[very thick, ->] (m) -- node[midway, right] {in \texttt{BX} merge \texttt{BY}} (n);
+          \draw[very thick, ->] (m) -- node[midway, right]
+            {in \texttt{BX} merge \texttt{BY}} (n);
+        }
       \end{tikzpicture}
     \end{column}
     \begin{column}{.5\linewidth}
@@ -608,7 +626,7 @@
           \item We merge \texttt{BY} into \texttt{BX}
         \end{enumerate}
       \end{exampleblock}
-      \begin{alertblock}{FF-Merge}
+      \begin{alertblock}<2->{FF-Merge}
         Apply changes of commits in \texttt{BY} starting at \texttt{BX} until
         you get to \texttt{BY}. Or \texttt{BX} just needs to ``catch up'' to
         \texttt{BY}. No new commits are created.
@@ -651,7 +669,7 @@
           \node[above = 1mm] at (m-1-4) {BY};
         \end{scope}
 
-        \matrix (n) [
+        \matrix (n) [visible on=<2->,
           below = 2cm of m,
           column sep = 8mm, row sep = 6mm,
           fill = lightgray!20, inner sep = 5mm, outer sep = 2mm,
@@ -664,22 +682,25 @@
           {} & {} & |[fill=teal]| {} & & |[fill=hsr-blue]| {} \\
         };
 
-        \begin{scope}[thick, <-]
-          \draw (n-2-1) -- (n-2-2);
-          \draw (n-2-2) -- (n-1-3);
-          \draw (n-1-3) -- (n-1-4);
-          \draw (n-1-4) -- (n-2-5);
+        \only<2->{
+          \begin{scope}[thick, <-]
+            \draw (n-2-1) -- (n-2-2);
+            \draw (n-2-2) -- (n-1-3);
+            \draw (n-1-3) -- (n-1-4);
+            \draw (n-1-4) -- (n-2-5);
 
-          \draw (n-2-2) -- (n-2-3);
-          \draw (n-2-3) -- (n-2-5);
-        \end{scope}
+            \draw (n-2-2) -- (n-2-3);
+            \draw (n-2-3) -- (n-2-5);
+          \end{scope}
 
-        \begin{scope}[font=\ttfamily]
-          \node[below = 1mm] at (n-2-5) {BX};
-          \node[above = 1mm] at (n-1-4) {BY};
-        \end{scope}
+          \begin{scope}[font=\ttfamily]
+            \node[below = 1mm] at (n-2-5) {BX};
+            \node[above = 1mm] at (n-1-4) {BY};
+          \end{scope}
 
-        \draw[very thick, ->] (m) -- node[midway, right] {in \texttt{BX} merge \texttt{BY}} (n);
+          \draw[very thick, ->] (m) -- node[midway, right]
+            {in \texttt{BX} merge \texttt{BY}} (n);
+        }
       \end{tikzpicture}
     \end{column}
     \begin{column}{.5\linewidth}
@@ -690,7 +711,7 @@
           \item We merge \texttt{BY} into \texttt{BX}
         \end{enumerate}
       \end{exampleblock}
-      \begin{alertblock}{Observations}
+      \begin{alertblock}<2->{Observations}
         When you merge you are in \texttt{BX} importing changes from \texttt{BY}
         \begin{itemize}
           \item ``our'' changes are from \texttt{BX}
@@ -1274,7 +1295,7 @@
       Hashes are \emph{not} unique!
     \end{column}
     \begin{column}{.5\linewidth}
-      \begin{block}{Merkle DAG}
+      \begin{block}<2->{Merkle DAG}
         A Merkle DAG is a DAG $G = (V,A)$ with a hash
         \[
           h : V \times \{0,1\}^d \to \{0,1\}^d
@@ -1285,7 +1306,7 @@
             \sum_{u \in \operatorname{n}^+(v)} \ell(u) \biggr)
         \end{align*}
       \end{block}
-      \begin{alertblock}{Properties}
+      \begin{alertblock}<2->{Properties}
         \begin{itemize}
           \item Immutable data structure
           \item Cryptographic verification
@@ -1542,7 +1563,7 @@ Date:   Wed Feb 9 19:53:06 2022 +0100
           {} & {} \\
           {} & {} \\
           {} \\
-          |(commit) [fill=magenta]| {} \\
+          |(commit) [fill=magenta, visible on=<3->]| {} \\
         };
 
         \begin{scope}[thick, <-]
@@ -1554,40 +1575,43 @@ Date:   Wed Feb 9 19:53:06 2022 +0100
           \draw (m-2-2) -- (m-3-2);
           \draw (m-3-2) to[out=-90, in=90] (m-4-1);
 
-          \draw[dashed] (m-4-1) -- (commit);
+          \only<3->{ \draw[dashed] (m-4-1) -- (commit); }
         \end{scope}
 
         % files
         \draw (tracked) pic{file = {a a.c {}}};
-        \draw (staged |- tracked) pic{file = {as a.c {}}};
+        \only<2->{ \draw (staged |- tracked) pic{file = {as a.c {}}}; }
 
         \draw pic{file = {u u.c {below = 1cm of tracked.south}}};
-        \draw (u -| as) pic{file = {us u.c {}}};
+        \only<2->{ \draw (u -| as) pic{file = {us u.c {}}}; }
 
         % arrows
-        \begin{scope}[thick] 
-          \draw[->] (a) to[bend left = 20] 
-            node[midway, above, fill = white] {add} (as);
+        \only<2->{
+          \begin{scope}[thick] 
+            \draw[->] (a) to[bend left = 20] 
+              node[midway, above, fill = white] {add} (as);
 
-          \draw[<-] (a) to[bend right = 20]
-            node[midway, below, fill = white] {reset} (as);
+            \draw[<-] (a) to[bend right = 20]
+              node[midway, below, fill = white] {reset} (as);
 
-          \draw[->] (u) to[bend left = 20]
-            node[midway, above, fill = white] {add} (us);
+            \draw[->] (u) to[bend left = 20]
+              node[midway, above, fill = white] {add} (us);
 
-          \draw[<-] (u) to[bend right = 20]
-            node[midway, below, fill = white] {reset} (us);
-        \end{scope}
+            \draw[<-] (u) to[bend right = 20]
+              node[midway, below, fill = white] {reset} (us);
+          \end{scope}
+        }
 
         % Commit
-        \draw[draw = magenta, thick, fill = magenta!80, path fading = west] 
-          (as.north east) -- (commit.west) -- (us.south east) -- cycle;
+        \only<3->{
+          \draw[draw = magenta, thick, fill = magenta!80, path fading = west] 
+            (as.north east) -- (commit.west) -- (us.south east) -- cycle;
 
 
-        \path (us.south east) -- node (M) [pos = .35] {} (as.north east);
-        \path (M) -- node [pos = .85, sloped, font={\bfseries\large},
-          black, anchor = east] {commit} (commit.west);
-
+          \path (us.south east) -- node (M) [pos = .35] {} (as.north east);
+          \path (M) -- node [pos = .85, sloped, font={\bfseries\large},
+            black, anchor = east] {commit} (commit.west);
+        }
         % \draw[black] (current bounding box.north west) 
         %   rectangle (current bounding box.south east);
       \end{tikzpicture}
@@ -1773,6 +1797,7 @@ Date:   Wed Feb 9 19:53:06 2022 +0100
       \item you have to think (tip: abuse \texttt{git status} and read, always!)
     \end{itemize}
   \end{block}
+  \pause
   \begin{alertblock}{Graphical Interfaces}
     A good GUI that does not hide complexity
     \begin{itemize}
@@ -1843,6 +1868,7 @@ Date:   Wed Feb 9 19:53:06 2022 +0100
           \item Extremely easy
         \end{itemize}
       \end{block}
+      \pause
       \begin{block}{People Workflow}
         \begin{itemize}
           \item For very small teams
@@ -1853,6 +1879,7 @@ Date:   Wed Feb 9 19:53:06 2022 +0100
       \end{block}
     \end{column}
     \begin{column}{.5\linewidth}
+      \pause
       \begin{alertblock}{Branching Workflow}
         Every time you want to add a feature, make changes in a short lived
         branch until feature is complete, then merge that branch into a
@@ -2024,6 +2051,7 @@ Date:   Wed Feb 9 19:53:06 2022 +0100
       \end{block}
     \end{column}
     \begin{column}{.55\linewidth}
+      \pause
       \begin{alertblock}{Total Order in $S$}
         Intervals $[a, b) \in S$ can be ordered. Define 
         $J_i \succ J_j$ if $a_i > a_j$.
@@ -2052,14 +2080,14 @@ Date:   Wed Feb 9 19:53:06 2022 +0100
       \begin{alertblock}{Idea}
         Recursively apply intuition.
       \end{alertblock}
-      \begin{block}{Complexity (Landau)}
+      \begin{block}<3->{Complexity (Landau)}
         Base $b$ logarithmic search is $O(\log_b(n))$. In this case
         $b = 2$ (two options $q > a$ or $q < a$), so it usually called
         \emph{binary} search.
       \end{block}
     \end{column}
     \begin{column}{.5\linewidth}
-      \begin{alertblock}{Logarithmic Search}
+      \begin{alertblock}<2->{Logarithmic Search}
         Start with $Q = S$ then
         \begin{enumerate}
           \item take $J \in Q$ in the ``middle'' of $Q$ and if $q \in J$ we are done
@@ -2161,7 +2189,7 @@ Date:   Wed Feb 9 19:53:06 2022 +0100
           \item Anything really
         \end{itemize}
       \end{block}
-      \begin{alertblock}{Rough Idea}
+      \begin{alertblock}<2->{Rough Idea}
         \begin{enumerate}
           \item Take commit graph $G = (V,A)$ we want to find $\bar{v} \in V$
             that did above
@@ -2205,40 +2233,42 @@ Date:   Wed Feb 9 19:53:06 2022 +0100
           \draw (m-3-2) -- (m-5-2);
         \end{scope}
         
-        \matrix (s) [
-          right = 7mm of m,
-          row sep = 4mm,
-          matrix of nodes, nodes = {
-            circle, draw, thick, fill=orange,
-            inner sep = 0pt, outer sep = 1mm, minimum size = 2.5mm,
-          }
-        ] {
-          |(A) [label={0:A}]| {} \\ 
-          |(C) [label={0:C}]| {} \\ 
-          |(B) [label={0:B}]| {} \\ 
-          |(E) [label={0:E}]| {} \\ 
-          |(D) [label={0:D}]| {} \\ 
-          |(G) [label={0:G}]| {} \\ 
-          |(F) [label={0:F}]| {} \\ 
-          |(I) [label={0:I}]| {} \\ 
-          |(H) [label={0:H}]| {} \\ 
-          |(J) [label={0:J}]| {} \\
-        };
-        
-        \begin{scope}[thick, ->]
-          \draw (A) to[bend left] (B);
-          \draw (A) to (C);
-          \draw (B) to[bend left] (D);
-          \draw (C) to[bend right] (D);
-          \draw (C) to[bend right] (E);
-          \draw (D) to[bend left] (F);
-          \draw (D) to[bend right] (I);
-          \draw (E) to[bend right] (G);
-          \draw (F) to[bend left] (H);
-          \draw (G) to[bend right] (I);
-          \draw (H) to (J);
-          \draw (I) to[bend right] (J);
-        \end{scope}
+        \only<2->{
+          \matrix (s) [
+            right = 7mm of m,
+            row sep = 4mm,
+            matrix of nodes, nodes = {
+              circle, draw, thick, fill=orange,
+              inner sep = 0pt, outer sep = 1mm, minimum size = 2.5mm,
+            }
+          ] {
+            |(A) [label={0:A}]| {} \\ 
+            |(C) [label={0:C}]| {} \\ 
+            |(B) [label={0:B}]| {} \\ 
+            |(E) [label={0:E}]| {} \\ 
+            |(D) [label={0:D}]| {} \\ 
+            |(G) [label={0:G}]| {} \\ 
+            |(F) [label={0:F}]| {} \\ 
+            |(I) [label={0:I}]| {} \\ 
+            |(H) [label={0:H}]| {} \\ 
+            |(J) [label={0:J}]| {} \\
+          };
+          
+          \begin{scope}[thick, ->]
+            \draw (A) to[bend left] (B);
+            \draw (A) to (C);
+            \draw (B) to[bend left] (D);
+            \draw (C) to[bend right] (D);
+            \draw (C) to[bend right] (E);
+            \draw (D) to[bend left] (F);
+            \draw (D) to[bend right] (I);
+            \draw (E) to[bend right] (G);
+            \draw (F) to[bend left] (H);
+            \draw (G) to[bend right] (I);
+            \draw (H) to (J);
+            \draw (I) to[bend right] (J);
+          \end{scope}
+        }
       \end{tikzpicture}
     \end{column}
   \end{columns}
@@ -2254,6 +2284,7 @@ Date:   Wed Feb 9 19:53:06 2022 +0100
           \item \texttt{git bisect good 258dbc1} (commit \texttt{258dbc1\ldots}
             was good, has X)
         \end{enumerate}
+        \pause
         Git will checkout (go back in time to) a commit between the good one
         and the bad one and you have to say
         \begin{itemize}
@@ -2261,6 +2292,7 @@ Date:   Wed Feb 9 19:53:06 2022 +0100
           \item \texttt{git bisect bad}
           \item \texttt{git bisect skip} (cannot test this commit for X)
         \end{itemize}
+        \pause
         Process repeats a few time ($\approx$ log of \# of commits between good
         and bad). If you have a script e.g. \texttt{check.py} that returns 0
         for good, 125 for skip, any other number for bad, it can be automated
