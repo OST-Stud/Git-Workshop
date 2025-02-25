@@ -19,7 +19,7 @@ language? Have you ever heard of Git? It is the industry standard tool to
 manage source code, do you know how to use it? No? We got you covered:
 
     When?    11. March 2025, 17:00
-    Where?   Campus Rapperswil Room 1.169
+    Where?   Campus Rapperswil Room 1.269
     What?    Presentation + Hands-on Kickstart. Bring your laptop!
 
 Git is not exactly easy to use, and that's why we provide a workshop. The first
