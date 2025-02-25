@@ -331,28 +331,28 @@
      transform="translate(-0.6485125,-16.717788)"><tspan
        x="70.444496"
        y="191.33952"
-       id="tspan4">- Understand basic principles: commit, branches, remotes, ...
+       id="tspan3">- Understand basic principles: commit, branches, remotes, ...
 </tspan><tspan
        x="70.444496"
        y="199.27702"
-       id="tspan5">- Learn about Merkle directed acyclic graphs (DAGs)
+       id="tspan17">- Learn about Merkle directed acyclic graphs (DAGs)
 </tspan><tspan
        x="70.444496"
        y="207.21452"
-       id="tspan7">- Learn the Git terminology: trees, blobs, staging area, ...
+       id="tspan18">- Learn the Git terminology: trees, blobs, staging area, ...
 </tspan><tspan
        x="70.444496"
        y="215.15202"
-       id="tspan8">- Understand Git services such as GitHub, GitLab, ...</tspan></text><text
+       id="tspan19">- Understand Git services such as GitHub, GitLab, ...</tspan></text><text
      xml:space="preserve"
      style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10.5833px;line-height:1.25;font-family:Futura;-inkscape-font-specification:'Futura, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
      x="69.555504"
      y="117.3731"
      id="text43"><tspan
        sodipodi:role="line"
-       id="tspan2">11. March 2025  17:00 ~ 19:00</tspan><tspan
+       id="tspan1">11. March 2025  17:00 ~ 19:00</tspan><tspan
        sodipodi:role="line"
-       id="tspan3">Campus Rapperswil Room 1.169</tspan></text><text
+       id="tspan2">Campus Rapperswil Room 1.269</tspan></text><text
      xml:space="preserve"
      style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:9.87778px;line-height:1.25;font-family:Futura;-inkscape-font-specification:'Futura, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
      x="69.585136"
@@ -391,11 +391,11 @@
      transform="translate(-0.6485125,30.774932)"><tspan
        x="70.444496"
        y="191.33952"
-       id="tspan9">- Learn to use the command line interface
+       id="tspan20">- Learn to use the command line interface
 </tspan><tspan
        x="70.444496"
        y="199.27702"
-       id="tspan11">- Guided tutorial ~60 minutes with a simple project</tspan></text><text
+       id="tspan21">- Guided tutorial ~60 minutes with a simple project</tspan></text><text
      xml:space="preserve"
      style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:9.87778px;line-height:1.25;font-family:Futura;-inkscape-font-specification:'Futura, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
      x="69.397453"
@@ -3275,7 +3275,7 @@
      inkscape:label="text25-9"><tspan
        x="70.444496"
        y="191.33952"
-       id="tspan15">Bring your Laptop!</tspan></text><text
+       id="tspan22">Bring your Laptop!</tspan></text><text
      xml:space="preserve"
      style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.35px;line-height:1.25;font-family:Futura;-inkscape-font-specification:'Futura, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;white-space:pre;inline-size:139.555;display:inline;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
      x="70.444496"
@@ -3285,7 +3285,7 @@
      inkscape:label="text25-9"><tspan
        x="70.444496"
        y="191.33952"
-       id="tspan16">https://forms.gle/D4UBP4fgWTKS1Rrv6</tspan></text><g
+       id="tspan23">https://forms.gle/D4UBP4fgWTKS1Rrv6</tspan></text><g
      id="g61"
      transform="translate(-105.20729,3.7318551)"><g
        id="g60"
