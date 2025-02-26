@@ -1527,31 +1527,24 @@
       \item Metadata: Author, Date, Message
     \end{itemize}
   \end{block}
-  \begin{exampleblock}{Example}
+  \begin{exampleblock}{Example (Git's first git commit)}
   \centering\scriptsize
 \begin{verbatim}
-commit 1cfdf5c198f1c74c2f894067baf4670f5bca8e70
-Author: Nao Pross <np@0hm.ch>
-Date:   Wed Feb 9 19:53:06 2022 +0100
+commit e83c5163316f89bfbde7d9ab23ca2e25604af290
+Author: Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Thu Apr 7 15:13:13 2005 -0700
 
-  Fix arrayobject.h path on Debian based distros
-  
-  On Debian Linux and its derivatives such as Ubuntu and LinuxMint, Python
-  packages installed through the package manager are kept in a different
-  non-standard directory called 'dist-packages' instead of the normal
-  'site-packages' [1].
-  
-  To detect the Linux distribution the 'platform' library (part of the
-  Python stdlib) provides a function 'platform.freedesktop_os_release()'
-  that parses a standard file '/etc/os-release' available in most Linux
-  distributions [2]. However this function is rather new (Python >= 3.10)
-  and unavailable in most python installations, so the core of its
-  functionaly was reimplemented here.
-  
-  [1]: https://wiki.debian.org/Python#Deviations_from_upstream
-  [2]: https://docs.python.org/3/library/platform.html#linux-platforms
-  
-  Signed-off-by: Jonas Schmid <schmid@stettbacher.ch>
+    Initial revision of "git", the information manager from hell
+
+commit 8bc9a0c769ac1df7820f2dbf8f7b7d64835e3c68
+Author: Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Thu Apr 7 15:16:10 2005 -0700
+
+    Add copyright notices.
+
+    The tool interface sucks (especially "committing" information, which is just
+    me doing everything by hand from the command line), but I think this is in
+    theory actually a viable way of describing the world. So copyright it.
 \end{verbatim}
   \end{exampleblock}
 \end{frame}
