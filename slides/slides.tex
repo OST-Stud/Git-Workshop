@@ -897,7 +897,7 @@
           },
           draw = hsr-blue, thick, fill=hsr-blue20,
         ] {
-          {} & {} &    & {} & |[fill=hsr-blue]| {} & |[fill=hsr-blue]| {} \\
+          {} & {} &    & {} & |[fill=hsr-blue, visible on=<3->]| {} & |[fill=hsr-blue, visible on=<3->]| {} \\
              & {} & {} \\
         };
         \node[
@@ -912,14 +912,21 @@
           \draw (b-1-1) -- (b-2-2);
           \draw (b-2-2) -- (b-2-3);
 
-          \draw[densely dashed] (b-1-4) -- (b-1-5);
-          \draw[densely dashed] (b-1-5) -- (b-1-6);
+          \only<3->{
+            \draw[densely dashed] (b-1-4) -- (b-1-5);
+            \draw[densely dashed] (b-1-5) -- (b-1-6);
+          }
         \end{scope}
 
-        \node[above = 2mm, font = \ttfamily] at (b-1-6) {trunk};
+        \only<1-2>{
+          \node[right = 2mm, font = \ttfamily] at (b-1-4) {trunk};
+        }
+        \only<3->{
+          \node[above = 2mm, font = \ttfamily] at (b-1-6) {trunk};
+        }
         \node[right = 2mm, font = \ttfamily] at (b-2-3) {feat};
 
-        \matrix (a) [
+        \matrix (a) [visible on=<2->,
           below = 16mm of b,
           row sep = 6mm, column sep = 6mm,
           outer sep = 3mm, inner sep = 6mm,
@@ -930,29 +937,39 @@
           draw = hsr-mauve, thick, fill=hsr-mauve20,
         ] {
           {} & {} &    & {} \\
-             & {} & {} &    & |[fill=hsr-mauve]| {} & |[fill=hsr-mauve]| {} \\
+             & {} & {} &    & |[fill=hsr-mauve, visible on=<3->]| {} & |[fill=hsr-mauve, visible on=<3->]| {} \\
         };
-        \node[
-          above, anchor = south, rotate = 90,
-          font = \bfseries, text = hsr-mauve,
-        ] at (a.west) {Alice's PC};
+        \only<2->{
+          \node[
+            above, anchor = south, rotate = 90,
+            font = \bfseries, text = hsr-mauve,
+          ] at (a.west) {Alice's PC};
 
-        \begin{scope}[thick, <-]
-          \draw (a-1-1) -- (a-1-2);
-          \draw (a-1-2) -- (a-1-4);
+          \begin{scope}[thick, <-]
+            \draw (a-1-1) -- (a-1-2);
+            \draw (a-1-2) -- (a-1-4);
 
-          \draw (a-1-1) -- (a-2-2);
-          \draw (a-2-2) -- (a-2-3);
+            \draw (a-1-1) -- (a-2-2);
+            \draw (a-2-2) -- (a-2-3);
 
-          \draw[densely dashed] (a-1-4) -- (a-2-5);
-          \draw[densely dashed] (a-2-3) -- (a-2-5);
-          \draw[densely dashed] (a-2-5) -- (a-2-6);
-        \end{scope}
+            \only<3->{
+              \draw[densely dashed] (a-1-4) -- (a-2-5);
+              \draw[densely dashed] (a-2-3) -- (a-2-5);
+              \draw[densely dashed] (a-2-5) -- (a-2-6);
+            }
+          \end{scope}
 
-        \node[above = 2mm, font = \ttfamily] at (a-1-4) {trunk};
-        \node[above = 2mm, font = \ttfamily] at (a-2-6) {feat};
+          \only<2>{
+            \node[right = 2mm, font = \ttfamily] at (a-1-4) {trunk};
+            \node[right = 2mm, font = \ttfamily] at (a-2-3) {feat};
+          }
+          \only<3->{
+            \node[above = 2mm, font = \ttfamily] at (a-1-4) {trunk};
+            \node[above = 2mm, font = \ttfamily] at (a-2-6) {feat};
+          }
 
-        \draw [very thick, hsr-mauve, ->] (b) -- node[midway, right] {clone} (a);
+          \draw [very thick, hsr-mauve, ->] (b) -- node[midway, right] {clone} (a);
+        }
       \end{tikzpicture}
     \end{column}
     \begin{column}{.4\linewidth}
