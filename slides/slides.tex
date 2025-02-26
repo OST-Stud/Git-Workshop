@@ -208,6 +208,107 @@
   \end{block}
 \end{frame}
 
+\begin{frame}[fragile]{This is not a Political Event}
+  \centering
+  \begin{tikzpicture}
+    \only<1>{
+      \node[font=\Huge\bfseries, text width = .8\linewidth]{Work \emph{together}?\newline Open Source?};
+    }
+    \only<2-4>{
+      \node {\includegraphics[width=\linewidth]{pic/social-coding}};
+    }
+    \only<3-4>{
+      \node {\includegraphics[width=.5\linewidth]{pic/opensourcecomm}};
+    }
+    \only<4>{
+      \node at (2,0)
+        {\includegraphics[width=.4\linewidth]{pic/stallman}};
+    }
+    \only<5-8>{
+      \node at (-3,0)
+        {\includegraphics[width=.5\linewidth]{pic/poster}};
+
+      \node at (3,0)
+        {\includegraphics[width=.5\linewidth]{pic/second}};
+    }
+    \only<6-8>{
+      \node at (3,0)
+        {\includegraphics[width=.5\linewidth, trim={0 200 0 200}, clip]{pic/politics-second}};
+    }
+    \only<7-8>{
+      \node at (-3,0)
+        {\includegraphics[width=.5\linewidth, trim={0 200 0 200}, clip]{pic/politics-poster}};
+    }
+    \only<8>{
+      \node (t) [font=\bfseries\Huge, fill=white]
+        {Reactionary politics is bad};
+
+      \node[font=\bfseries\large, fill=white, below, align=center, text width = .85\linewidth] at (t.south)
+        {Political discourse ($\neq$ political progress) desperately needs to slow down. Read. Listen.};
+    }
+    \only<9->{
+      \fill[white] (-7,4) rectangle (5,-5);
+      \node (book) at (-5, 1) {\includegraphics[width=.5\linewidth]{pic/dictator-handbook}};
+      \node[below right, font=\bfseries\large, fill=white, text width=4cm] at (book.north east)
+        {A recommendation if you are interested in politics};
+      \node[above right, font=\large, fill=white, text width=5cm, anchor = south west] at (book.south east)
+        {
+          Simplified explaination of selectorate theory. Mostly about the
+          \emph{structures} of power in politics than politics itself.
+        };
+
+      \node[below, anchor = north west, text width = \linewidth, fill=white] at (book.south west){
+        Also: \emph{Eristic Dialectic} (Schopenhauer) \emph{Amusing Ourselves to
+        Death} (Postman), \emph{Animal Farm} (Orwell), \emph{The Prince}
+        (Machiavelli), and the many classics (Plato, Aristotle, Locke, Rousseau,
+        Marx, Arendt, Rawls, Foucault, \ldots).
+      };
+    }
+  \end{tikzpicture}
+\end{frame}
+
+% \begin{frame}{Social Acceleration I}
+% 
+%   \begin{quote}
+%     She who lives twice as fast can realize twice as many worldly
+%     possibilities, achieve two times as many goals, have twice as many
+%     experiences, and accumulate twice as many lived events: she thus doubles
+%     the amount of worldly options she exhausts. One who lives infinitely fast
+%     no longer needs to fear death, the annihilator of options.
+%   \end{quote}
+% 
+%   \begin{quote}
+%     But the very same inventions, techniques, and methods that permit the
+%     accelerated realization of worldly possibilities and hence the increase of
+%     the total sum of options realized in a life, also multiply the number of
+%     variety of relizable options in an exponential way. 
+%   \end{quote}
+% 
+% \end{frame}
+% 
+% \begin{frame}{Social Acceleration II}
+% 
+%   \begin{quote}
+%     Contrary to the promise of acceleration the degree of exhaustion, the ratio
+%     of worldly possibilities realized in a life to those that are realizable,
+%     continually decreases no matter how much we hurry around heightening the
+%     tempo of our life. The modern strategy for realigning life time and worldly
+%     time therefore backfires.
+%   \end{quote}
+%   
+%   \begin{flushright}
+%     --- Hartmut Rosa, Social Acceleration, 2005
+%   \end{flushright}
+%   
+%   \vfill
+% 
+%   \begin{center}
+%     \Large\bfseries
+%     TL;DR: Slow the f*ck down.
+%   \end{center}
+%   \vfill
+% \end{frame}
+
 \section{The Solution}
 
 \begin{frame}{Solving the Problem: Snapshots}
