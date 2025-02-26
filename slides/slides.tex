@@ -2582,8 +2582,9 @@ Date:   Thu Apr 7 15:16:10 2005 -0700
 
 \begin{frame}{Hands-On Phase (Groupwork)}
   \only<1>{
-    \centering
-    \includegraphics[width=\linewidth]{pic/where-beer}
+    \begin{tikzpicture}[remember picture, overlay]
+      \node at (current page.center) {\includegraphics[width=\linewidth]{pic/where-beer}};
+    \end{tikzpicture}
   }
   \only<2>{
     \begin{columns}
