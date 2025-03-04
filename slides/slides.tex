@@ -116,7 +116,7 @@
           \item BSc in Electrical Engineering OST FH (here)
           \item MSc in EE spec. Control Theory (Regelungstechnik) at ETHZ
           \item For today ``Git connaisseur''
-          \item Languages: EN / DE / CH / IT / FR / JP
+          \item Languages for questions: EN / DE / CH / IT / \ldots
         \end{itemize}
       \end{block}
 
@@ -243,6 +243,9 @@
       \node (t) [font=\bfseries\Huge, fill=white]
         {Reactionary politics is bad};
 
+      \node[font=\bfseries\large, fill=white, above, align=center] at (t.north)
+        {How should I say it guys,};
+
       \node[font=\bfseries\large, fill=white, below, align=center, text width = .85\linewidth] at (t.south)
         {Political discourse ($\neq$ political progress) desperately needs to slow down. Read. Listen.};
     }
@@ -341,7 +344,7 @@
     ]
     \matrix (m) [
       column sep = 18mm, row sep = 1cm,
-      row 2/.style = {row sep = 5mm},
+      row 2/.style = {row sep = 8mm},
     ] {
         \pic[visible on=<1->]{file = {fb0 f {}}}; 
       & \pic[visible on=<2->]{file = {fb1 f {}}}; 
@@ -2008,11 +2011,10 @@ Date:   Thu Apr 7 15:16:10 2005 -0700
   \end{columns}
 \end{frame}
 
-\subsection{Time Travel}
-
-\begin{frame}{Restoring Changes from the Past}
-
-\end{frame}
+ % \subsection{Time Travel}
+ % 
+ % \begin{frame}{Restoring Changes from the Past}
+ % \end{frame}
 
 \subsection{Command Line vs GUI}
 
@@ -2545,7 +2547,7 @@ Date:   Thu Apr 7 15:16:10 2005 -0700
   \begin{block}{Further topics that were not covered}
     Git and its ecosystem have many more features
     \begin{itemize}
-      \item Stash, Blame, cherry-pick, \ldots
+      \item Stash, Blame, Squash, Tag, Cherry-Pick, \ldots
       \item Submodules and subtrees
       \item LFS (Large File Storage) for big (gigabytes) files 
       \item Email ``old school'' workflow (e.g. \href{https://sr.ht}{\texttt{sr.ht}} and Linux Kernel)
@@ -2569,7 +2571,7 @@ Date:   Thu Apr 7 15:16:10 2005 -0700
     \begin{column}{.5\linewidth}
       \begin{block}{Organization Goals}
         \begin{itemize}
-          \item Provide and maintain high-quality lecture summaries maintained by the community
+          \item Provide high-quality lecture summaries maintained by the community
           \item Teach \textrm{\LaTeX} and Git
           \item Connect students to study together for exams
         \end{itemize}
@@ -2593,7 +2595,7 @@ Date:   Thu Apr 7 15:16:10 2005 -0700
           \begin{itemize}
             \item Set up Git on your PC
             \item Test your understanding
-            \item Fuck up here with a toy project instead of on real work
+            \item \textbf{Fuck up here} with a toy project \textbf{instead of on real work}
           \end{itemize}
         \end{alertblock}
         \begin{exampleblock}{Sample Projects}
@@ -2608,11 +2610,11 @@ Date:   Thu Apr 7 15:16:10 2005 -0700
         \begin{block}{Plan}
           \begin{enumerate}
             \item Short note for Windows users
-            \item Install Git if you haven't already
             \item Form small groups 2 - 3 persons
             \item Grab some beers \& snacks
+            \item Install Git if you haven't already
             \item Work through the tutorial with your group
-            \item Work with other groups (see tutorial)
+            \item Work with other groups (see tutorial part 4)
           \end{enumerate}
           Ask questions if you get stuck
         \end{block}
