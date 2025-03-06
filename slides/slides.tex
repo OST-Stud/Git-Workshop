@@ -497,7 +497,7 @@
 
 \subsection{Branches}
 
-\begin{frame}[fragile]{Mathematical Digression: DAG}
+\begin{frame}[fragile]{Mathematical Digression I: DAG}
   \begin{columns}
     \begin{column}{.55\linewidth}
       \begin{block}{Directed Acyclic Graph}
@@ -664,9 +664,9 @@
           \draw (m-1-7) -- (m-1-8);
         \end{scope}
 
-        \node[right = 2mm, font=\ttfamily] at (m-1-8) {quickfix};
-        \node[above = 2mm, font=\ttfamily] at (m-2-10) {master};
-        \node[above = 2mm, font=\ttfamily] at (m-3-9) {feature};
+        \node[right = 2mm, font=\ttfamily, visible on=<2->] at (m-1-8) {quickfix};
+        \node[above = 2mm, font=\ttfamily, visible on=<2->] at (m-2-10) {master};
+        \node[above = 2mm, font=\ttfamily, visible on=<2->] at (m-3-9) {feature};
       \end{tikzpicture}
     \end{column}
   \end{columns}
@@ -677,12 +677,12 @@
         Branches are subgraphs (subtrees) from a common anchestor in the commit
         graph.
       \end{block}
-      \begin{alertblock}{Naming Branches}
+      \begin{alertblock}{Naming Branches}<2->
         Branch names are labels on their most recent commit.
       \end{alertblock}
     \end{column}
     \begin{column}{.5\linewidth}
-      \begin{exampleblock}{Examples}
+      \begin{exampleblock}{Examples}<3->
         \begin{itemize}
           \item \texttt{quickfix} branch is from \texttt{master}
           \item Magenta (no name) branch was merged into \texttt{master}
@@ -1515,7 +1515,7 @@
 
 \subsection{Hash and Merkle DAG}
 
-\begin{frame}{Mathematical Digression: Hashes and Merkle DAG}
+\begin{frame}{Mathematical Digression II: Hash and Merkle DAG}
   \begin{columns}
     \begin{column}{.5\linewidth}
       \textbf{``One-way fast'' functions}
@@ -1553,7 +1553,7 @@
   \end{columns}
 \end{frame}
 
-\begin{frame}[fragile]{Mathematical Digression: Visualizing Merkle DAGs}
+\begin{frame}[fragile]{Mathematical Digression II: Merkle DAGs}
   \begin{columns}
     \begin{column}{\linewidth}
       To compute the label of a node, you need to first compute the label of
@@ -2251,7 +2251,7 @@ Date:   Thu Apr 7 15:16:10 2005 -0700
 
 \subsection{Logarithmic Search}
 
-\begin{frame}[fragile]{Mathematical Digression: Logarithmic Search I}
+\begin{frame}[fragile]{Mathematical Digression III: Logarithmic Search I}
   \begin{center}
     \begin{tikzpicture}
       \draw[very thick, ->] (0,0) -- (9,0) node[above] {$\mathbb{R}$};
@@ -2295,7 +2295,7 @@ Date:   Thu Apr 7 15:16:10 2005 -0700
   \end{columns}
 \end{frame}
 
-\begin{frame}{Mathematical Digression: Logarithmic Search II}
+\begin{frame}{Mathematical Digression III: Logarithmic Search II}
   \begin{columns}
     \begin{column}{.5\linewidth}
       \begin{block}{Logarithmic Search Intuition}
@@ -2331,7 +2331,7 @@ Date:   Thu Apr 7 15:16:10 2005 -0700
   \end{columns}
 \end{frame}
 
-\begin{frame}[fragile]{Mathematical Digression: Logarithmic Search III}
+\begin{frame}[fragile]{Mathematical Digression III: Logarithmic Search III}
   We can visualize the decisions of logarithmic searching as a tree. The
   decision goes to the left or right branch depending on whether $q < a$ or $q
   > a$ respectively. Obseve that the tree has depth $3 = \log_2(8)$.
@@ -2607,7 +2607,7 @@ Date:   Thu Apr 7 15:16:10 2005 -0700
         \end{exampleblock}
       \end{column}
       \begin{column}{.5\linewidth}
-        \begin{block}{Plan}
+        \begin{block}{Plan}<2->
           \begin{enumerate}
             \item Short note for Windows users
             \item Form small groups 2 - 3 persons
