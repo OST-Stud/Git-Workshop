@@ -20,7 +20,7 @@ Pick one based on your skills. And we can proceed.
 
   1. Unzip your chosen project somewhere
      
-  2. Open a terminal in the root directory of the project. Windows: `Git Bash Here`, MacOS: `Services > New Terminal at Folder`, Linux: you got this
+  2. Open a terminal in the root directory of the project. Right click and then for Windows: `Git Bash Here`, MacOS: `Services > New Terminal at Folder`, Linux: you got this
 
   3. Initialize a Git repository
      
@@ -189,7 +189,7 @@ The other members can finally do something. Hopefully they are not drunk yet.
 
 ### Fast-forward merge
 
-We will finally start to do something interesting with the Git commit graph. First we do a fast-forward merge, we need two people, which we will call **Alice** and **Bob**. To make it interesting for the group, we will work with remotes branches, even though the theory is the same for local branches.
+We will finally start to do something interesting with the Git commit graph. First we do a fast-forward merge, we need two people, who we will call **Alice** and **Bob**. You can choose who plays which character. To make it interesting for the group, we will work with remotes branches, even though the theory is the same for local branches.
 
   1. **Alice:** In the project folder there is a file `TODO.txt` with a list of things to do, pick any task you like and perform the change in the project code. After saving the files you can see your changes under `Changes not staged for commit: ...` in the output of
 
@@ -322,10 +322,44 @@ You should be starting to get how this work. We will give less detailed instruct
 
 ### Rebase
 
+We will now repeat this process again but instead of merging we will use rebase. This is typical if you work in a team that [wants to have a linear history](https://www.endoflineblog.com/oneflow-a-git-branching-model-and-workflow) or simplify pull requests (more on them later). To make it more interesting we will also start to use local branches.
+
+  1. **Alice:** Pick any task from `TODO.txt` and do it. Add your changes to the staging area and commit:
+     ```sh
+     alice $ git add ... # add the files you changes
+     alice $ git commit  # with a good commit message
+     ```
+     **Bob:** Do the same but on a local branch `feature-x`. To create a new local branch from your local master (which is one commit behind Alice’s):
+     
+     ```sh
+     bob $ git branch feature-x master # create a new branch feature-x from master
+     bob $ git switch feature-x # move your HEAD to feature-x
+     ```
+     
+     Then pick a different task from Alice (to avoid conflicts for now), make your changes and commit them
+
+     ```sh
+     alice $ git add ... # add the files you changes
+     alice $ git commit  # with a good commit message
+     ```
+     
+  3. **Alice:** Upload your changes to the remote repository
+
+     ```sh
+     alice $ git push origin master
+     ```
+
+  4. **Bob:** Fetch alice’s change and rebase your changes on top
+
+     ```sh
+     bob $ git fetch origin
+     bob $ git rebase master
+     ```
+
 ### Feature Branches
 
 > [!NOTE]
-> This subsection is about software development and project management. You can move to the next part if you are not interested in the topic.
+> This subsection is about software development and project management. You can skip to the next part if you are not interested in the topic.
 
 ## 4. Collaborate with other Teams
 
