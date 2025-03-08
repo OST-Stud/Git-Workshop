@@ -38,12 +38,8 @@ are other simple tasks:
        the same key is pressed again. You can add a new variable `GameState.paused`
        to keep track of this.
 
- - [ ] Make the game harder:
-    - [ ] Make game go faster every 10 points in `GameState.score`, by
-          decreasing `GameState.tick`
-    - [ ] If the player does not eat the food in 500 ticks, progressively
-          decrease the grid size (eg by 1 every 100 ticks). When the player
-          eats the food grid is restored to original size.
+ - [ ] Make the game harder: Make game go faster every 10 points in `GameState.score`, by
+       decreasing `GameState.tick`
 
  - [ ] Use a cool retro font
     - [ ] Download the UNSCII font from http://viznut.fi/unscii/
@@ -61,12 +57,13 @@ Long(er) Tasks
 
 Are you bored? Do the Git tutorial first!
 
- - [ ] Improve rendering of snake by adding more details
-
- - [ ] Add a menu screen
+ - [ ] Make the game harder, again: If the player does not eat the food in 500
+       ticks, progressively decrease the grid size (eg by 1 every 100 ticks). 
+       When the player eats the food grid is restored to original size.
 
  - [ ] Implement a scoreboard
     - [ ] Create a scoreboard screen
     - [ ] Let players enter their name
     - [ ] Create a system to store past scores
 
+ - [ ] Add a menu screen
