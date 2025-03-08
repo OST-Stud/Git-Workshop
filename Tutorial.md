@@ -28,7 +28,7 @@ Pick one based on your skills. And we can proceed.
      $ git init  
      ```
 
-     You can see that git is not tracking anything yet by reading the output of
+     You can see that git has no commits and is not tracking anything yet by reading the output of the command
     
      ```sh
      $ git status
@@ -63,7 +63,7 @@ Next, we need to add the existing files to git. Before doing so it recommended t
   4. Add the existing files or directories to the staging area using
 
      ```sh
-     $ git add README.md src ... # add all files
+     $ git add .gitignore README.md TODO.md ...  snake # add all files
      ```
 
      Adding directories will recursively add all files within them.
@@ -102,9 +102,15 @@ Next, we need to add the existing files to git. Before doing so it recommended t
      You can save the file and close the editor. In the terminal you should see a summary
 
      ```
-     STUB
-     [master 5c40c24] Move project into version control
-       2 files changed, 36 insertions(+), 1 deletion(-)
+      [master (root-commit) 132f122] Move into version control
+       7 files changed, 962 insertions(+)
+       create mode 100644 .gitignore
+       create mode 100644 README.md
+       create mode 100644 TODO.md
+       create mode 100644 poetry.lock
+       create mode 100644 pyproject.toml
+       create mode 100644 snake/__main__.py
+       create mode 100644 snake/game.py     
      ```
 
 You have successfully created your first commit in the `master` branch (the default branch name used by Git).
@@ -135,10 +141,10 @@ If you have never used SSH or don’t have an SSH key pair you need to generate 
      $ cat ~/.ssh/id_ed25519.pub  # or wherever it was saved
      ```
 
-  3. Copy **your public key** which should look something like this (note: this is not my public key, but one generated for this example)
+  3. Copy **your public key** which should look something like this
 
      ```
-     ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPLVAByZGT6xWM2kg7AeEkXbujOETnHdw2FOUx3/mpow np@0hm.ch
+     ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPLVAByZGT6xWM2kg7AeEkXbujOETnHdw2FOUx3/mpow your_email@example.com
      ```
 
   4. On your GitHub profile in the browser go to `Settings > SSH and GPG Keys > New SSH Key` and paste your public key, leave the key type settings to an `Authentication Key`.
@@ -151,7 +157,7 @@ The person that has done all of the steps so far (in part 1) needs to create a r
 
   1. Go to [github.com/new](https://github.com/new) and create a new repository. Do not pick a template, leave it to public, and hit `Create Repository`. If you don’t know what to call repository set the name to `gitws25`.
   
-     After a while you will see the repository has been created on your profile. There will be instructions on the website on how to upload your code. We will follow `... or push an existing repository from the command line`. Before following the instructions make sure that in the blue shaded area you have selected `SSH`
+     After a while you will see the repository has been created on your profile. There will be instructions on the website on how to upload your code. We will follow `... or push an existing repository from the command line`. Before following the instructions make sure that in the blue shaded area you have selected SSH
 
   2. In your terminal you can add the remote with
 
@@ -159,17 +165,20 @@ The person that has done all of the steps so far (in part 1) needs to create a r
      $ git remote add origin git@github.com:YOUR_USERNAME/gitws25.git # replace with your remote URL
      ```
 
-     This will let Git know that there is a server named `origin` (name is local to your machine) at the GitHub URL. You can also call it something else, like `github` instead of `origin` (note that for the rest of this tutorial we will use `origin`, you can use a different name but you will need to update the next command accordingly).
+     This will let Git know that there is a server named `origin` (name is local to your machine) at the GitHub URL. You can also call it something else, like `github` instead of `origin` (note that for the rest of this tutorial we will use `origin`, you can use a different name but you will need to update the next command accordingly). You can then check that Git has saved the remote by reading the output of
+     ```sh
+     $ git remote --verbose # show remote url
+     ```
 
-  3. Now we can push our first commit to `origin` with
+  4. Now we can push our first commit to `origin` with
 
      ```sh
-     $ git push --set-upstream master origin
+     $ git push --set-upstream origin master
      ```
 
      The `--set-upstream` flag will set `origin` to be the default remote to push to. After setting this once you will be able to write just `git push`, and it will push to `origin`.
 
-  4. Now, if you refresh the browser you should see that your file have been uploaded to GitHub.
+  5. Now, if you refresh the browser you should see that your file have been uploaded to GitHub.
 
 ## 3. Collaborate with Your Team
 
