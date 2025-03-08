@@ -13,7 +13,7 @@ use [poetry](https://python-poetry.org/) for dependency management. Without
 poetry you can use a simmple a virtual environment
 
 ```bash
-$ python -m venv venv
+$ python3 -m venv venv
 $ source venv/bin/activate          # on windows: venv\Scripts\activate
 $ python3 -m pip install pygame
 $ python3 -m snake
