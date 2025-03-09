@@ -1,18 +1,31 @@
 # Hands-on Phase Tutorial
 
-This tutorial will be a guide to reduce the pain of using the git command line for the first time. This requires you to have at least another person to work with. The fictitious setup is to move an existing project into version control (git) and further develop it with your friends / colleagues.
+This tutorial will be a guide to reduce the pain of using the git command line for the first time. This requires you to have at least another person to work with. The fictitious setup is to move an existing project into version control and further develop it with your friends / colleagues.
+
+### This tutorial was written by me *without use of ChatGPT*. I do not have a Nobel in literature, but please **read every sentences**, I promise they are necessary and concise.
 
 ## Configure Git on your Machine
 
-After having installed Git we can set some settings. Open a terminal: Windows `Git Bash`, MacOS `Terminal.app`, Linux: use your favourite.
+After having installed Git we first configure git. Open a terminal: Windows `Git Bash`, MacOS `Terminal.app`, Linux: use your favourite. The first thing you have to do is tell git your information
 
-First we set that we want that pull is an alias for fetch + merge (it can also be configured to be fetch + rebase, more on this later).
+```sh
+$ git config --global user.name "Your Name"            # Name shown in commits
+$ git config --global user.email your_email@domain.ch  # E-Mail shown in commits
+```
+
+Next define a new command `git graph` to visualise the commit graph in the command line. We will use this command throughout the tutorial:
+
+```sh
+$ git config --global alias.graph "log --all --decorate --graph --oneline"
+```
+
+We set that we want that pull is an alias for fetch + merge (it can also be configured to be fetch + rebase, more on this later):
 
 ```sh
 $ git config --global pull.rebase false
 ```
 
-Then the following commands to set some sane defaults, mostly taken from [this article](https://blog.gitbutler.com/how-git-core-devs-configure-git/) if you are interested in the details.
+Then the following commands to set some sane defaults, mostly taken from [this article](https://blog.gitbutler.com/how-git-core-devs-configure-git/) if you are interested in the details:
 
 ```sh
 $ git config --global init.defaultBranch master # default branch is called master
@@ -22,7 +35,7 @@ $ git config --global fetch.pruneTags true      # same for tags
 $ git config --global fetch.all true            # always get all remote branches
 ```
 
-Finally we choose an easy to use text editor to write the commit messages. Unless you have set this up differently in the installation the default editor is VIM, which is very powerful but not user friendly at all.
+Finally we set up a simple text editor to write the commit messages. Unless you have customised it differently during the installation the default editor is VIM, which is very powerful but not user friendly at all.
 
 ### Windows
 
@@ -44,10 +57,13 @@ $ git config --global core.editor "open -e -W -n"
 
 We provide the following sample projects for you to work with Git:
 
- - A Python application [`sample_game.zip`](./samples/sample_game.zip)
+ - A Python application (Game) [`sample_game.zip`](./samples/sample_game.zip)
  - A LaTeX Document `sample_report.zip`
 
-Pick one based on your skills. And we can proceed.
+Pick one based on your skills and download the zip file.
+
+> [!TIP]
+> Each zip contains a `README.md` and a `TODO.md` (both are plain text files) with further information and things to do respectively. For example in the `README.md` of `sample_game.zip` there are instructions on how to run the game.
 
 ## 1. Moving Into Version Control
 
@@ -56,31 +72,31 @@ Pick one based on your skills. And we can proceed.
 
 ### Get the Source and Intialize
 
-  1. Unzip your chosen project somewhere
+  1. Unzip your chosen project somewhere. Hereinafter we will refer to the unzipped folder as your "project directory".
      
-  2. Open a terminal in the root directory of the project. Right click and then for Windows: `Git Bash Here`, MacOS: `Services > New Terminal at Folder`, Linux: you got this
+  2. Open a terminal in the directory of the project. To do so right click on the directory and then for Windows: `Git Bash Here`, MacOS: `Services > New Terminal at Folder`, Linux: you got this.
 
-  3. Initialize a Git repository
+  3. Initialize a Git repository:
      
      ```sh
      $ git init  
      ```
+     
+     This will initialise a Git repository. If you enable hidden files in Windows Explorer (`View > Hidden Items`) or Finder (`CMD + Shift + .`) you will see that it has created a `.git` directory.
 
-     You can see that git has no commits and is not tracking anything yet by reading the output of the command:
+     Then you can also see that Git has no commits and is not tracking anything (yet) by reading the output of the command:
     
      ```sh
      $ git status
      ```
 
-This will initialise a git repository. If you enable hidden files in Windows Explorer (`View > Hidden Items`) or Finder (`CMD + Shift + .`) you will see that it has created a `.git` directory.
-
 ### Move the Existing Code
 
-Next, we need to add the existing files to git. Before doing so it recommended to avoid adding useless files (e.g. temporary files generated by the OS), so we must tell git to ignore such files:
+Next, we need to add the existing files to Git. Before doing so it recommended to avoid adding useless files (e.g. temporary files generated by the OS such as `Thumbs.db` or `.DS_Store`), so we must tell git to ignore such files:
 
   1. Create an empty text file in the project directory called `.gitignore` (yes, it must start with a dot).
   
-  2. Go to [gitignore.io](https://gitignore.io) and add relevant tags, for example `Windows, MacOS, Linux, Python` or `LaTeX` and copy the string generate by the website into the `.gitignore` file. Alternatively, you can also do this directly from the terminal
+  2. Go to [gitignore.io](https://gitignore.io) and in the box type what you are using, for example `Windows`, `MacOS`, `Linux`, `Python` or `LaTeX`, hit `Create` and copy the text generated by the website into the `.gitignore` file. Alternatively, you can also do this directly from the terminal:
   
      ```sh
      $ curl https://www.toptal.com/developers/gitignore/api/linux,macos,windows,python,latex > .gitignore
@@ -88,7 +104,7 @@ Next, we need to add the existing files to git. Before doing so it recommended t
      
      You can also do it by hand (without the website), the syntax is not difficult to learn.
 
-  3. Run in the terminal
+  3. Run in the terminal:
 
      ```sh
      $ git status
@@ -96,28 +112,27 @@ Next, we need to add the existing files to git. Before doing so it recommended t
       
      You should see under `Untracked files:` a list of files in red that git is detecting are not part of the repository. Check that there are no useless files such as `Thumbs.db`, `.DS_Store`, `Report.aux`. You can see git tells you
 
-     > `use "git add <file>..." to include in what will be committed`
+     > use "`git add <file>...`" to include in what will be committed
 
      ![Recall the 3 (or 4) conceptual areas of Git](./assets/stage.png)
 
-  4. Add the existing files or directories to the staging area using
+  4. Add the existing files or directories to the staging area using:
 
      ```sh
      $ git add .gitignore README.md TODO.md pyproject.toml snake # add all files
      ```
 
-     Adding directories will recursively add all files within them.
-     Or shorter if you want to **add** all files at once
+     Adding directories will recursively add all files within them. Alternatively a shorter command if you want to add all files at once is:
      
      ```sh
      $ git add --all
      ```
 
-> [!WARNING]
+> [!CAUTION]
 > Do not abuse the `--all` flag. In general you should carefully chose what files to add. By carelessly using `--all` in large projects you might accidentally add cryptographic secrets, files that are gigabytes in size, etc..
 
-> [!CAUTION]
-> If you are using `sample_game.zip` and have ran the game, do not add the `venv` directory because it contains a lot of files that are not directly part of your project. If you have accidentally added it e.g. using `git add —all` (though this should not have happened if `.gitignore` was configured correctly) reset your staging area by running:
+> [!WARNING]
+> If you are using `sample_game.zip` and have ran the game, do not add the `venv` directory because it contains a lot of files that are not directly part of your project. If you have accidentally added it e.g. using `git add --all` (though this should not have happened if `.gitignore` was configured correctly) reset your staging area by running:
 > ```sh
 > $ git reset # remove everything from the staging area
 > ```
@@ -136,6 +151,8 @@ Next, we need to add the existing files to git. Before doing so it recommended t
      ```sh
      $ git commit
      ```
+
+     ![Commit your changes](./assets/commit.png)
 
      This will open your editor of choice. You will see a summary of the changes, these will not be part of the commit since if you read you will see the message
      
