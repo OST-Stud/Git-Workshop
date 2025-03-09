@@ -42,10 +42,10 @@ Next, we need to add the existing files to git. Before doing so it recommended t
 
   1. Create an empty text file in the project directory called `.gitignore` (yes, it must start with a dot)
   
-  2. Go to [gitignore.io](https://gitignore.io) and add relevant tags, for example `Windows, MacOS, Linux, Python` or `LaTeX` and copy the string generate by the website into the `.gitignore` file. On MacOS / Linux you can also do this directly from the terminal
+  2. Go to [gitignore.io](https://gitignore.io) and add relevant tags, for example `Windows, MacOS, Linux, Python` or `LaTeX` and copy the string generate by the website into the `.gitignore` file. Alternatively, you can also do this directly from the terminal
   
      ```sh
-     $ curl https://www.toptal.com/developers/gitignore/api/latex,linux,macos,python,windows > .gitignore
+     $ curl https://www.toptal.com/developers/gitignore/api/latex,linux,macos,python,windows,latex > .gitignore
      ```
      
      You can also do it by hand (without the website), the syntax is not difficult to learn.
@@ -63,7 +63,7 @@ Next, we need to add the existing files to git. Before doing so it recommended t
   4. Add the existing files or directories to the staging area using
 
      ```sh
-     $ git add .gitignore README.md TODO.md ...  snake # add all files
+     $ git add .gitignore README.md TODO.md pyproject.toml snake # add all files
      ```
 
      Adding directories will recursively add all files within them.
@@ -75,6 +75,13 @@ Next, we need to add the existing files to git. Before doing so it recommended t
 
 > [!WARNING]
 > Do not abuse the `--all` flag. In general you should carefully chose what files to add. By carelessly using `--all` in large projects you might accidentally add cryptographic secrets, files that are gigabytes in size, etc..
+
+> [!CAUTION]
+> If you are using `sample_game.zip` and have ran the game, do not add the `venv` directory because it contains a lot of files that are not directly part of your project. If you have accidentally added it (e.g. using `git add --all`, though this should not have happened if `.gitignore` was configured correctly) reset your staging area by running:
+> ```sh
+> $ git reset # remove everything from the staging area
+> ```
+> and then add the files again more carefully.
 
   5. Run again
 
@@ -269,13 +276,13 @@ You should be starting to get how this work. We will give less detailed instruct
 > $ git restore FILE # DELETES your changes in file!
 > ```
 
-  5. **Bob:** Push the newly created merge commit to the remote `origin`
+  4. **Bob:** Push the newly created merge commit to the remote `origin`
 
      ```sh
      bob $ git push origin master
      ```
 
-  6. **Alice:** Download Bob’s changes and do a fast-forward merge
+  5. **Alice:** Download Bob’s changes and do a fast-forward merge
 
      ```sh
      alice $ git fetch origin
@@ -315,7 +322,7 @@ You should be starting to get how this work. We will give less detailed instruct
 
      You will see (read) that you are in the middle of a merge `You have unmerged paths.`, and Git will tell you which files caused the merge conflict under `Unmerged paths:`.
 
-  7. **Bob:** To manually resolve the conflict. You need to choose one of the changes (for this tutorial it does not matter which one), then delete the other changes you do not want, the line `=======`, as well as the other two lines with `<<<<<<<` and `>>>>>>>`, and save the file. Then you can continue the merge that had failed by completing the merge commit:
+  9. **Bob:** To manually resolve the conflict. You need to choose one of the changes (for this tutorial it does not matter which one), then delete the other changes you do not want, the line `=======`, as well as the other two lines with `<<<<<<<` and `>>>>>>>`, and save the file. Then you can continue the merge that had failed by completing the merge commit:
 
      ```sh
      bob $ git add ... # add files that caused conflict, and have been fixed
@@ -325,9 +332,9 @@ You should be starting to get how this work. We will give less detailed instruct
 >[!TIP]
 > It is good to resolve a merge conflict by hand at leat once as learning experience. For actual work though, there are many graphical tools that show you the two options and do the deleting automatically for you (though usually not adding and committing in Git). See slide on Graphical User Interfaces.
 
-  8. **Bob:** Push your changes to remote
+  10. **Bob:** Push your changes to remote
 
-  9. **Alice:** Fetch and merge (pull) Bob’s changes. The two machines should be in sync. 
+  11. **Alice:** Fetch and merge (pull) Bob’s changes. The two machines should be in sync. 
 
 ### Rebase
 
