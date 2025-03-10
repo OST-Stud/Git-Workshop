@@ -996,12 +996,12 @@
           \end{scope}
 
           \begin{scope}[font=\ttfamily]
-            \node[below = 1mm] at (n-1-5) {BX};
+            \node[below = 1mm] at (n-1-3) {BX};
             \node[above = 1mm] at (n-1-5) {BY};
           \end{scope}
 
           \draw[very thick, ->] (m) -- node[midway, right]
-            {in \texttt{BX} rebase \texttt{BY}} (n);
+            {in \texttt{BY} rebase \texttt{BX}} (n);
         }
       \end{tikzpicture}
     \end{column}
@@ -1015,7 +1015,8 @@
       \end{exampleblock}
       \begin{alertblock}<2->{Observations}
         When you rebase you need to reapply your changes on the newer versions
-        of the files. Hence you may need to resolve some conflicts during this process.
+        of the files. Hence you may need to resolve some conflicts during this
+        process. But then there not a merge commit.
       \end{alertblock}
     \end{column}
   \end{columns}
@@ -2610,7 +2611,7 @@ Date:   Thu Apr 7 15:16:10 2005 -0700
       \begin{column}{.5\linewidth}
         \begin{block}{Plan}
           \begin{enumerate}
-            \item Short note for Windows users
+            \item Short introduction of tutorial
             \item Form small groups 2 - 3 persons
             \item Grab some beers \& snacks
             \item Install Git if you haven't already
