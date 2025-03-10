@@ -23,6 +23,10 @@
 \usetikzlibrary{positioning}
 \usetikzlibrary{trees}
 
+\usepackage{pgf-pie}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.15}
+
 \pgfdeclarelayer{bg}
 \pgfsetlayers{bg,main}
 
@@ -109,7 +113,7 @@
 \frame{\titlepage}
 
 \begin{frame}[fragile]{About Me, You and Polls}
-  \begin{columns}[b]
+  \begin{columns}[t]
     \begin{column}{.5\linewidth}
       \begin{block}<1->{Me}
         \begin{itemize}
@@ -119,7 +123,8 @@
           \item Languages for questions: EN / DE / CH / IT / \ldots
         \end{itemize}
       \end{block}
-
+    \end{column}
+    \begin{column}{.5\linewidth}
       \begin{exampleblock}{You}<2->
         \begin{itemize}
           \item Background?
@@ -127,20 +132,22 @@
           \item Ever used Git?
         \end{itemize}
       \end{exampleblock}
-    \end{column}
-    \begin{column}{.5\linewidth}
-      % \resizebox{\linewidth}{!}{
-      %   \begin{tikzpicture}
-      %     \pie[
-      %       radius=2.2, explode=.1, % text=pin,
-      %       color={hsr-blue40, hsr-mauve40, hsr-lakegreen40}
-      %     ]{
-      %       35.8/What is \textrm{\LaTeX},
-      %       58.2/Beginner,
-      %        6/Intermediate
-      %     }
-      %   \end{tikzpicture}
-      % }
+      \only<2->{
+        \resizebox{\linewidth}{!}{
+          \begin{tikzpicture}
+            \pie[
+              radius=2.2, explode=.2, % text=pin,
+              color={hsr-blue40, hsr-mauve40, hsr-lakegreen40, hsr-petrol40, hsr-reed40}
+            ]{
+              14.3/No clue,
+              32.1/Have heard of Git,
+              25.0/Noob wizards,
+              25.0/Struggling,
+               3.6/Pretty good
+            }
+          \end{tikzpicture}
+        }
+      }
     \end{column}
   \end{columns}
 \end{frame}
@@ -196,7 +203,7 @@
       \item[E-Mail] People sent patch files to each other via email.
     \end{description}
   \end{block}
-  \begin{block}{Popular Tools Today}
+  \begin{block}{Other Tools Today}
     \begin{description}
       \item[Cloud Storage] Does not work offline. Their whole business model is
         against you. You have no (real) control over when to sync. Also,
@@ -222,8 +229,18 @@
       \node {\includegraphics[width=.5\linewidth]{pic/opensourcecomm}};
     }
     \only<4>{
-      \node at (2,0)
+      \node (s) at (2,0)
         {\includegraphics[width=.4\linewidth]{pic/stallman}};
+
+      \node[fill=white, font=\large\bfseries] at (s.north) {Richard Stallman};
+
+      \node[fill=white, font=\large\bfseries, text width=5cm] (t) at (-3, 0){
+        Almost all companies and research institutes use a Cloud service for
+        data and / or Git (some stats put Git at > 90\% market share for VCS).
+        \\ \hspace{1cm} \\
+        So, no, Git and open source are not communism. Git is widely used in
+        industry.
+      };
     }
     \only<5-8>{
       \node at (-3,0)
@@ -245,10 +262,10 @@
         {Reactionary politics is bad};
 
       \node[font=\bfseries\large, fill=white, above, align=center] at (t.north)
-        {How should I say it guys};
+        {Funny but on the other hand};
 
-      \node[font=\bfseries\large, fill=white, below, align=center, text width = .85\linewidth] at (t.south)
-        {Political discourse ($\neq$ political progress) desperately needs to slow down. Read. Listen.};
+      \node[font=\bfseries\large, fill=white, below, align=center, text width = .8\linewidth] at (t.south)
+        {Political discourse ($\neq$ political progress) desperately needs to slow down.};
     }
     \only<9->{
       \fill[white] (-7,4) rectangle (5,-5);
@@ -1387,7 +1404,8 @@
   \begin{columns}
     \begin{column}{1.1\linewidth}
       Since it is very a common operation there is a shorthand to fetch and
-      merge the remote branch with the same name as the current one.
+      merge\footnote{Can also be configured to be rebase instead of merge.} the remote branch
+      with the same name as the current one.
 
       \begin{center}
         \noindent
@@ -2590,7 +2608,7 @@ Date:   Thu Apr 7 15:16:10 2005 -0700
       \node at (current page.center) {\includegraphics[width=\linewidth]{pic/where-beer}};
     \end{tikzpicture}
   }
-  \only<2>{
+  \only<2->{
     \begin{columns}
       \begin{column}{.5\linewidth}
         \begin{alertblock}{Goals}
@@ -2600,7 +2618,7 @@ Date:   Thu Apr 7 15:16:10 2005 -0700
             \item \textbf{Fuck up here} with a toy project \textbf{instead of on real work}
           \end{itemize}
         \end{alertblock}
-        \begin{exampleblock}{Sample Projects}
+        \begin{exampleblock}{Your Tasks}
           \begin{itemize}
             \item Import existing code into new repository
             \item Directly contribute to a repository
@@ -2609,7 +2627,7 @@ Date:   Thu Apr 7 15:16:10 2005 -0700
         \end{exampleblock}
       \end{column}
       \begin{column}{.5\linewidth}
-        \begin{block}{Plan}
+        \begin{block}{Plan}<3->
           \begin{enumerate}
             \item Short introduction of tutorial
             \item Form small groups 2 - 3 persons
@@ -2618,7 +2636,7 @@ Date:   Thu Apr 7 15:16:10 2005 -0700
             \item Work through the tutorial with your group
             \item Work with other groups (see tutorial part 4)
           \end{enumerate}
-          Ask questions if you get stuck
+          Ask questions if you get stuck.
         \end{block}
       \end{column}
     \end{columns}
