@@ -139,11 +139,11 @@
               radius=2.2, explode=.2, % text=pin,
               color={hsr-blue40, hsr-mauve40, hsr-lakegreen40, hsr-petrol40, hsr-reed40}
             ]{
-              14.3/No clue,
-              32.1/Have heard of Git,
-              25.0/Noob wizards,
-              25.0/Struggling,
-               3.6/Pretty good
+              12.9/No clue,
+              35.5/Have heard of Git,
+              22.6/Noob wizards,
+              25.8/Struggling,
+               3.2/Pretty good
             }
           \end{tikzpicture}
         }
@@ -216,77 +216,77 @@
   \end{block}
 \end{frame}
 
-\begin{frame}[fragile]{This is not a Political Event}
-  \centering
-  \begin{tikzpicture}
-    \only<1>{
-      \node[font=\Huge\bfseries, text width = .8\linewidth]{Work \emph{together}?\newline Open Source?};
-    }
-    \only<2-4>{
-      \node {\includegraphics[width=\linewidth]{pic/social-coding}};
-    }
-    \only<3-4>{
-      \node {\includegraphics[width=.5\linewidth]{pic/opensourcecomm}};
-    }
-    \only<4>{
-      \node (s) at (2,0)
-        {\includegraphics[width=.4\linewidth]{pic/stallman}};
-
-      \node[fill=white, font=\large\bfseries] at (s.north) {Richard Stallman};
-
-      \node[fill=white, font=\large\bfseries, text width=5cm] (t) at (-3, 0){
-        Almost all companies and research institutes use a Cloud service for
-        data and / or Git (some stats put Git at > 90\% market share for VCS).
-        \\ \hspace{1cm} \\
-        So, no, Git and open source are not communism. Git is widely used in
-        industry.
-      };
-    }
-    \only<5-8>{
-      \node at (-3,0)
-        {\includegraphics[width=.5\linewidth]{pic/poster}};
-
-      \node at (3,0)
-        {\includegraphics[width=.5\linewidth]{pic/second}};
-    }
-    \only<6-8>{
-      \node at (3,0)
-        {\includegraphics[width=.5\linewidth, trim={0 200 0 200}, clip]{pic/politics-second}};
-    }
-    \only<7-8>{
-      \node at (-3,0)
-        {\includegraphics[width=.5\linewidth, trim={0 200 0 200}, clip]{pic/politics-poster}};
-    }
-    \only<8>{
-      \node (t) [font=\bfseries\Huge, fill=white]
-        {Reactionary politics is bad};
-
-      \node[font=\bfseries\large, fill=white, above, align=center] at (t.north)
-        {Funny but on the other hand};
-
-      \node[font=\bfseries\large, fill=white, below, align=center, text width = .8\linewidth] at (t.south)
-        {Political discourse ($\neq$ political progress) desperately needs to slow down.};
-    }
-    \only<9->{
-      \fill[white] (-7,4) rectangle (5,-5);
-      \node (book) at (-5, 1) {\includegraphics[width=.5\linewidth]{pic/dictator-handbook}};
-      \node[below right, font=\bfseries\large, fill=white, text width=4cm] at (book.north east)
-        {A recommendation if you are interested in politics};
-      \node[above right, font=\large, fill=white, text width=5cm, anchor = south west] at (book.south east)
-        {
-          Simplified explaination of selectorate theory. Mostly about the
-          \emph{structures} of power in politics than politics itself.
-        };
-
-      \node[below, anchor = north west, text width = \linewidth, fill=white] at (book.south west){
-        Also: \emph{Eristic Dialectic} (Schopenhauer) \emph{Amusing Ourselves to
-        Death} (Postman), \emph{Animal Farm} (Orwell), \emph{The Prince}
-        (Machiavelli), and the many classics (Plato, Aristotle, Locke, Rousseau,
-        Marx, Arendt, Rawls, Foucault, \ldots).
-      };
-    }
-  \end{tikzpicture}
-\end{frame}
+% \begin{frame}[fragile]{This is not a Political Event}
+%   \centering
+%   \begin{tikzpicture}
+%     \only<1>{
+%       \node[font=\Huge\bfseries, text width = .8\linewidth]{Work together?\newline Open Source? \newline Literally communism};
+%     }
+%     \only<2-4>{
+%       \node {\includegraphics[width=\linewidth]{pic/social-coding}};
+%     }
+%     \only<3-4>{
+%       \node {\includegraphics[width=.5\linewidth]{pic/opensourcecomm}};
+%     }
+%     \only<4>{
+%       \node (s) at (2,0)
+%         {\includegraphics[width=.4\linewidth]{pic/stallman}};
+% 
+%       \node[fill=white, font=\large\bfseries] at (s.north) {Richard Stallman};
+% 
+%       \node[fill=white, font=\large\bfseries, text width=5cm] (t) at (-3, 0){
+%         Almost all companies and research institutes use a Cloud service for
+%         data and / or Git (some stats put Git at > 90\% market share for VCS).
+%         \\ \hspace{1cm} \\
+%         So, no, Git and open source are not communism. Git is widely used in
+%         industry.
+%       };
+%     }
+%     \only<5-8>{
+%       \node at (-3,0)
+%         {\includegraphics[width=.5\linewidth]{pic/poster}};
+% 
+%       \node at (3,0)
+%         {\includegraphics[width=.5\linewidth]{pic/second}};
+%     }
+%     \only<6-8>{
+%       \node at (3,0)
+%         {\includegraphics[width=.5\linewidth, trim={0 200 0 200}, clip]{pic/politics-second}};
+%     }
+%     \only<7-8>{
+%       \node at (-3,0)
+%         {\includegraphics[width=.5\linewidth, trim={0 200 0 200}, clip]{pic/politics-poster}};
+%     }
+%     \only<8>{
+%       \node (t) [font=\bfseries\Huge, fill=white]
+%         {Reactionary politics is bad};
+% 
+%       \node[font=\bfseries\large, fill=white, above, align=center] at (t.north)
+%         {Funny but on the other hand};
+% 
+%       \node[font=\bfseries\large, fill=white, below, align=center, text width = .8\linewidth] at (t.south)
+%         {Political discourse ($\neq$ political progress) desperately needs to slow down.};
+%     }
+%     \only<9->{
+%       \fill[white] (-7,4) rectangle (5,-5);
+%       \node (book) at (-5, 1) {\includegraphics[width=.5\linewidth]{pic/dictator-handbook}};
+%       \node[below right, font=\bfseries\large, fill=white, text width=4cm] at (book.north east)
+%         {A recommendation if you are interested in politics};
+%       \node[above right, font=\large, fill=white, text width=5cm, anchor = south west] at (book.south east)
+%         {
+%           Simplified explaination of selectorate theory. Mostly about the
+%           \emph{structures} of power in politics than politics itself.
+%         };
+% 
+%       \node[below, anchor = north west, text width = \linewidth, fill=white] at (book.south west){
+%         Also: \emph{Eristic Dialectic} (Schopenhauer) \emph{Amusing Ourselves to
+%         Death} (Postman), \emph{Animal Farm} (Orwell), \emph{The Prince}
+%         (Machiavelli), and the many classics (Plato, Aristotle, Locke, Rousseau,
+%         Marx, Arendt, Rawls, Foucault, \ldots).
+%       };
+%     }
+%   \end{tikzpicture}
+% \end{frame}
 
 % \begin{frame}{Social Acceleration I}
 % 
@@ -1864,6 +1864,103 @@ Date:   Thu Apr 7 15:16:10 2005 -0700
         }
         % \draw[black] (current bounding box.north west) 
         %   rectangle (current bounding box.south east);
+      \end{tikzpicture}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Your HEAD}
+  \begin{columns}
+    \begin{column}{.95\paperwidth}
+      \centering
+      \begin{tikzpicture}[]
+        % \draw[gray,step=0.25] (-2, -5) grid (10, 2.5);
+        % \clip (-2, -5) rectangle (10, 2.5);
+        \node (tracked) at (0,0) [on background layer, 
+          draw, thick, hsr-mauve, fill=hsr-mauve20,
+          minimum width = 3cm, minimum height = 3cm,
+        ] {};
+
+        \node (fs) at ($(tracked.north) + (0, .25)$) [
+          on background layer,
+          anchor = north,
+          draw, thick, gray, dashed,
+          minimum width = 3.5cm, minimum height = 6.5cm,
+        ] {};
+
+        \node (staged) [on background layer, 
+          right = 1cm of tracked.north east, anchor = north west,
+          draw, thick, hsr-blue, fill=hsr-blue20,
+          minimum width = 3cm, minimum height = 6cm,
+        ] {};
+
+        \node (graph) [on background layer, 
+          right = 1cm of staged.north east, anchor = north west,
+          draw, thick, hsr-lakegreen, fill=hsr-lakegreen20,
+          minimum width = 3cm, minimum height = 6cm,
+        ] {};
+
+        \node (storage) at ($(staged.north west) + (-.25, .25)$) [
+          on background layer,
+          anchor = north west,
+          draw, thick, gray, dashed,
+          minimum width = 7.5cm, minimum height = 6.5cm,
+        ] {};
+
+        % area labels
+        \node at (tracked.north west)
+          [anchor = north west, font = \bfseries] {Tracked};
+
+        \node at (staged.north west)
+          [anchor = north west, font = \bfseries] {Staging Area};
+
+        \node at (graph.north west)
+          [anchor = north west, font = \bfseries] {Commit Graph};
+
+        \node at (fs.north west)
+          [anchor = south west, font = \bfseries, gray] {Work Tree};
+
+        \node at (tracked.south west)
+          [anchor = north west, gray] {Untracked};
+
+        \node at (storage.north west)
+          [anchor = south west, font = \bfseries, gray] {Storage \texttt{.git}};
+
+        % commit graph
+        \matrix (m) at (graph) [
+          row sep = 8mm, column sep = 5mm,
+          matrix of nodes,
+          nodes = {
+            draw, thick, circle, fill = orange,
+            inner sep = 0pt, outer sep = .5mm, minimum size = 2mm,
+          }
+        ] {
+          {} \\
+          {} & {} \\
+          {} & {} \\
+          {} \\
+          |(commit) [fill=magenta]| {} \\
+        };
+
+        \begin{scope}[thick, <-]
+          \draw (m-1-1) -- (m-2-1);
+          \draw (m-2-1) -- (m-3-1);
+          \draw (m-3-1) -- (m-4-1);
+
+          \draw (m-1-1) to[out=-90, in=90] (m-2-2);
+          \draw (m-2-2) -- (m-3-2);
+          \draw (m-3-2) to[out=-90, in=90] (m-4-1);
+
+          \draw (m-4-1) -- (commit);
+        \end{scope}
+
+        % files
+        \draw (tracked) pic{file = {a a.c {}}};
+        \draw (staged |- tracked) pic{file = {as a.c {}}};
+
+        \draw pic{file = {u u.c {below = 1cm of tracked.south}}};
+        \draw (u -| as) pic{file = {us u.c {}}};
+
       \end{tikzpicture}
     \end{column}
   \end{columns}
