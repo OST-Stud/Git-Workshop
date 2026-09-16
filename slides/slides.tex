@@ -1001,7 +1001,7 @@
             inner sep = 0pt, outer sep = 1mm, minimum size = 2.5mm,
           },
         ] {
-          {} & {} & |[fill=teal]| {} & |[fill=magenta]| {} & |[fill=magenta]| {}  \\
+          {} & {} & |[fill=magenta]| {} & |[fill=magenta]| {} & |[fill=teal]| {}  \\
         };
 
         \only<2->{
@@ -1013,12 +1013,12 @@
           \end{scope}
 
           \begin{scope}[font=\ttfamily]
-            \node[below = 1mm] at (n-1-3) {BX};
-            \node[above = 1mm] at (n-1-5) {BY};
+            \node[below = 1mm] at (n-1-5) {BX};
+            \node[above = 1mm] at (n-1-4) {BY};
           \end{scope}
 
           \draw[very thick, ->] (m) -- node[midway, right]
-            {in \texttt{BY} rebase \texttt{BX}} (n);
+            {in \texttt{BX} rebase \texttt{BY}} (n);
         }
       \end{tikzpicture}
     \end{column}
